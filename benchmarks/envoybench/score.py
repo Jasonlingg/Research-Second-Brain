@@ -22,14 +22,14 @@ from math import comb, isfinite
 from pathlib import Path
 
 from benchmarks.envoybench.frozen_dataset import load_split
-from src.eval.artifacts import configuration_hash, content_hash
-from src.eval.research_review import (
+from src.experiments.eval.research_review import (
     load_corpus,
     materialize_evidence,
     review_markdown,
     score_review,
 )
 from src.research.benchmark import validate_benchmark
+from src.shared.artifacts import configuration_hash, content_hash
 
 REVIEW_VERSION = "envoybench-blind-review-v1"
 KEY_VERSION = "envoybench-blind-key-v1"

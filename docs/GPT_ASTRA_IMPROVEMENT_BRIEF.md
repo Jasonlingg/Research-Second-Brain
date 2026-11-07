@@ -40,8 +40,8 @@ variables at once.
 | --- | --- | --- |
 | Environment | `src/env/document_env.py`, `repl.py`, `tools.py`, `reward.py`, `corpus.py` | Persistent Python execution, retrieval tools, rewards, and corpus loading. |
 | Policies | `src/policies/qwen_*.py`, `qwen_common.py` | Same Qwen base with no adapter, SFT adapter, or GRPO adapter. |
-| Training | `scripts/train_sft.py`, `collect_sft_data.py`, `train_grpo_custom.py` | LoRA SFT and a custom multi-turn GRPO implementation. |
-| Evaluation | `scripts/run_eval.py`, `eval_checkpoints.sh`, `summarize_eval.py`, `analyze_run.py` | Runs policies and persists transcripts for summary and hop analysis. |
+| Training | `scripts/case_study/train_sft.py`, `collect_sft_data.py`, `train_grpo_custom.py` | LoRA SFT and a custom multi-turn GRPO implementation. |
+| Evaluation | `scripts/case_study/run_eval.py`, `eval_checkpoints.sh`, `summarize_eval.py`, `analyze_run.py` | Runs policies and persists transcripts for summary and hop analysis. |
 | Evidence | `RESULTS.md`, `docs/EVAL_RUNBOOK.md`, `docs/QWEN_TRAINING_RESEARCH_AND_IMPROVEMENTS.md` | Results, executed checkpoint runbook, and optimizer analysis. |
 
 `docs/EVAL_RUNBOOK.md` is the operational source for checkpoint evaluation. The three public
@@ -71,7 +71,7 @@ adapters are `jasonlingg/doctracerrl-sft-qwen2.5-7b`,
 
 1. **Training and evaluation do not report the same return.** During GRPO rollouts,
    `_collect_rollout()` accumulates retrieval-hit shaping rewards and the final submission reward.
-   `src/eval/harness.py::run_single()` overwrites `reward` each turn, so its saved transcript keeps
+   `src/experiments/eval/harness.py::run_single()` overwrites `reward` each turn, so its saved transcript keeps
    only the final submission reward. The checkpoint leaderboard therefore cannot say whether it is
    measuring the training objective. Give outcome metrics and shaping return separate names and
    persist both.

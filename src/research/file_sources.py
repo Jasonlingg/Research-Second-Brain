@@ -13,7 +13,7 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
-from src.eval.artifacts import content_hash
+from src.shared.artifacts import content_hash
 from src.research.agent import load_snapshot
 from src.research.web_sources import canonicalize_web_url
 

@@ -10,7 +10,7 @@ existing experiment-mode tools while preserving the historical server file
 used by pinned replay artifacts:
 
 ```bash
-python scripts/research_justification_mcp.py \
+python scripts/mcp/research_justification_mcp.py \
   --store-root ~/.envoy/ml-experiments \
   --library-root ~/.envoy/arxiv-library
 ```
@@ -40,14 +40,14 @@ register the complete local workflow with the Python environment you installed:
 
 ```bash
 claude mcp add envoy-research -- "$(command -v python)" \
-  "$(pwd)/scripts/research_justification_mcp.py"
+  "$(pwd)/scripts/mcp/research_justification_mcp.py"
 ```
 
 For Codex, register the same server from the repository root:
 
 ```bash
 codex mcp add envoy-research -- "$(command -v python)" \
-  "$(pwd)/scripts/research_justification_mcp.py"
+  "$(pwd)/scripts/mcp/research_justification_mcp.py"
 ```
 
 The repository's [experiment-decision skill](https://github.com/Jasonlingg/Qwen-Envoy/blob/archive-full/.codex/skills/envoy-research-decision/SKILL.md)
@@ -62,7 +62,7 @@ both absolute paths with your installed Python and checkout paths:
   "mcpServers": {
     "envoy-research": {
       "command": "/absolute/path/to/python",
-      "args": ["/absolute/path/to/rlm-explorer/scripts/research_justification_mcp.py"]
+      "args": ["/absolute/path/to/rlm-explorer/scripts/mcp/research_justification_mcp.py"]
     }
   }
 }

@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
-from src.eval.artifacts import content_hash
+from src.shared.artifacts import content_hash
 from src.research.papers import content_hash_all
 
 QASPER_DATASET = "allenai/qasper"
@@ -443,7 +443,7 @@ def build_qasper_code_exec_benchmark(
 
     Reuses the same paper/document conversion as build_qasper_snapshot — that part
     is already protocol-agnostic — and only adapts the question schema, since the
-    code-execution harness (scripts/run_eval.py + src/research/benchmark.py) expects
+    code-execution harness (scripts/case_study/run_eval.py + src/research/benchmark.py) expects
     a different shape than the paused JSON-action protocol's questions.json.
     """
     if num_questions is not None and num_questions < 1:

@@ -1,0 +1,76 @@
+# Envoy research MCP
+
+A personal second brain for ML experiments: keep paper evidence, results and
+the decisions between them accessible to your assistant across sessions.
+
+## Use it
+
+From the repository root, with Python 3.10 or newer:
+
+```bash
+python -m pip install -e '.[mcp,vault]'
+```
+
+Configure your MCP client to launch:
+
+```bash
+python /absolute/path/to/rlm-explorer/scripts/mcp/research_justification_mcp.py
+```
+
+See [client configuration](../docs/RESEARCH_JUSTIFICATIONS.md#connect-an-mcp-client).
+Core tools need no GPU or model key. New paper searches use the public network;
+optional Nemotron calls require explicit configuration. Training dependencies,
+QASPER corpus downloads and Studio are not required to start this server.
+
+## What it does
+
+- Find previous work in curated experiment history and saved records.
+- Discover arXiv papers and inspect bounded text passages.
+- Link questions, findings, measurements and decisions, preserving revisions.
+- Refresh linked Obsidian notes after successful MCP saves.
+
+The `review_research_memory` MCP prompt guides the host assistant through a
+source-checking pass. It returns instructions, not an automatically executed
+review. The resulting draft separates observations, hypotheses, conflicts and
+next checks; nothing is saved automatically. See [the workflow](../docs/MEMORY_WORKFLOW.md).
+
+## Obsidian
+
+```bash
+python scripts/mcp/export_research_vault.py
+```
+
+Open `out/envoy-research-vault` as a vault and start at `Home.md`. Add `--refresh`
+for an existing export. Keep annotations in `My Notes`, outside generated
+folders. Personal notes do not sync into MCP recall. See
+[refresh and backups](../docs/EXPERIMENT_MODE.md#browse-the-research-history-in-obsidian).
+
+Private records and caches live outside Git, normally under `~/.envoy/`.
+Generated exports are ignored under `out/`. The curated atlas reads selected
+tracked case-study artifacts; it does not import training runners or launch jobs.
+
+## Code and checks
+
+| Start here | Responsibility |
+| --- | --- |
+| [`research_justification_mcp.py`](../scripts/mcp/research_justification_mcp.py) | Current server entry point and memory-review prompt. |
+| [`experiment_mode_extended_mcp.py`](../scripts/mcp/experiment_mode_extended_mcp.py) | Question, experiment, decision and source tools. |
+| [`ml_experiment_store.py`](../src/mcp/ml_experiment_store.py) | Versioned records and evidence receipts. |
+| [`experiment_atlas.py`](../src/mcp/experiment_atlas.py) | Bounded reads of selected historical artifacts. |
+| [`export_research_vault.py`](../scripts/mcp/export_research_vault.py) | Generated Obsidian view. |
+
+```bash
+python -m pip install 'pytest>=8,<9'
+python -m pytest -c pytest-mcp.ini
+```
+
+Run from the repository root. This suite uses fake sources/transports and needs
+no QASPER download, GPU, model weights or paid endpoint. Optional reader/harness
+integration is also tested in the [case-study suite](../case-study/README.md).
+
+## Limits
+
+Recall uses word overlap. A PyTorch ranker and new Qwen memory workers are not
+integrated. Source hashes and exact quotes establish provenance, not semantic
+support. The small [paired MCP pilot](../docs/RESEARCH_MCP_PAIRED_PILOT_20261026.md)
+did not establish an advantage over web research plus Markdown notes.

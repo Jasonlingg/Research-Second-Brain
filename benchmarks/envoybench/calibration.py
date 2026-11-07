@@ -17,8 +17,8 @@ from pathlib import Path
 from benchmarks.envoybench.diagnostics import known_source_id
 from benchmarks.envoybench.frozen_dataset import DEFAULT_DATASET, load_split
 from benchmarks.envoybench.judge import ROW_FIELDS
-from src.eval.artifacts import configuration_hash
-from src.eval.research_review import load_corpus
+from src.experiments.eval.research_review import load_corpus
+from src.shared.artifacts import configuration_hash
 
 
 def prepare_sample(

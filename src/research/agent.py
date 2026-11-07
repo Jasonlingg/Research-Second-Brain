@@ -13,7 +13,7 @@ from uuid import uuid4
 
 from jsonschema import ValidationError
 
-from src.eval.artifacts import configuration_hash, content_hash
+from src.shared.artifacts import configuration_hash, content_hash
 from src.research.action_schema import ACTION_SCHEMA, validate_structured_action
 from src.research.tools_runtime import ResearchTools
 

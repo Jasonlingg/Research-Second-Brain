@@ -13,7 +13,6 @@ import json
 from pathlib import Path
 from typing import Iterable
 
-from src.eval.artifacts import content_hash
 from src.research.benchmark import validate_benchmark
 from src.research.qasper import (
     CODE_EXEC_CONVERTER_VERSION,
@@ -26,6 +25,7 @@ from src.research.qasper import (
     _records,
     _to_code_exec_question,
 )
+from src.shared.artifacts import content_hash
 
 SCHEMA_VERSION = "envoybench-splits-v1"
 MANIFEST_VERSION = "envoybench-data-manifest-v1"

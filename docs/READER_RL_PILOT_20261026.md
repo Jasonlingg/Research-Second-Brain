@@ -90,7 +90,7 @@ jointly. These are implementing-assistant observations on **training-only**
 episodes, not independent human labels or permission to add an alias. The
 underlying receipts are in the ignored
 `out/reader-prime-restart-20261026/controller-training/cycle-*/rollouts/*/rollout.json`
-files; the scoring entry point is `src/training/reader_data.py:score_episode`.
+files; the scoring entry point is `src/experiments/training/reader_data.py:score_episode`.
 
 A focused implementing-assistant triage of five distinct training cases makes
 the mixed bucket concrete. These observations are **diagnostic**, not new gold
@@ -117,7 +117,7 @@ change the original reward, checkpoint or evaluation result.
 
 Request 526 began after the second passage read at 01:47:38 Toronto. Around
 01:48:04 the local non-streaming budget proxy returned a 502 with `ReadTimeout`.
-`src/training/prime_budget.py` bounds each upstream HTTP read to 25 seconds.
+`src/experiments/training/prime_budget.py` bounds each upstream HTTP read to 25 seconds.
 The recovered vLLM log shows a running request and approximately 18 generated
 tokens/second through 01:48:00, followed by the controller's cleanup SIGTERM at
 01:48:06. No sleep/wake transition was found in the failure interval, and the

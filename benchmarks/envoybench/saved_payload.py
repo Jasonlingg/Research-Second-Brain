@@ -23,7 +23,7 @@ from benchmarks.envoybench.score import (
     _verify_artifacts,
     score_completed_review,
 )
-from src.eval.artifacts import configuration_hash
+from src.shared.artifacts import configuration_hash
 
 HERE = Path(__file__).resolve().parent
 RELEASE_RETRIEVAL_BASELINE = (

@@ -27,7 +27,7 @@ from urllib.request import (
     build_opener,
 )
 
-from src.eval.artifacts import content_hash
+from src.shared.artifacts import content_hash
 from src.research.agent import load_snapshot
 
 PARSER_VERSION = "web-html-v1"

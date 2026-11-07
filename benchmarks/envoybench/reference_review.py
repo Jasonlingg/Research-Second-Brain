@@ -18,8 +18,8 @@ from pathlib import Path
 from typing import Iterator
 
 from benchmarks.envoybench.score import _validated_references, reference_review_template
-from src.eval.artifacts import content_hash
 from src.research.benchmark import validate_benchmark
+from src.shared.artifacts import content_hash
 
 
 def _validate_corpus(benchmark: dict, corpus_dir: Path) -> None:

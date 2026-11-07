@@ -13,7 +13,7 @@ it does not establish that fine-tuned Qwen improved.
 pip install -e '.[mcp,vault]'
 # Needed only for model-authored Python:
 docker build -f benchmarks/envoybench/Dockerfile -t rlm-sandbox .
-claude mcp add arxiv-research -- python "$(pwd)/scripts/arxiv_research_mcp.py" --reader none
+claude mcp add arxiv-research -- python "$(pwd)/scripts/mcp/arxiv_research_mcp.py" --reader none
 ```
 
 The default reader is `none`, even if an API key is present. Search, citations,
@@ -43,10 +43,10 @@ requests), and a 1,024-token completion limit per request. Input histories grow;
 these limits do not imply a fixed dollar budget. No automatic transport retry
 is added. Reader errors return per-paper statuses.
 
-For Qwen v5 with a configured vLLM endpoint (see `scripts/serve_vllm.sh`):
+For Qwen v5 with a configured vLLM endpoint (see `scripts/case_study/serve_vllm.sh`):
 
 ```bash
-claude mcp add arxiv-research-qwen -- python "$(pwd)/scripts/arxiv_research_mcp.py" \
+claude mcp add arxiv-research-qwen -- python "$(pwd)/scripts/mcp/arxiv_research_mcp.py" \
   --reader qwen --qwen-endpoint http://127.0.0.1:8000/v1 --qwen-model envoy \
   --qwen-checkpoint jasonlingg/qwen-envoy-qwen3-8b-qasper-sft-v5@27b912a863ff914ad45baa03624d8911dc1e17fb/artifacts/full/checkpoint-50
 ```

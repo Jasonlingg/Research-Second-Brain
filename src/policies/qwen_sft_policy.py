@@ -1,13 +1,13 @@
 """Qwen2.5-7B-Instruct + SFT LoRA adapter — mandatory ablation baseline.
 
-Loads a LoRA checkpoint trained by scripts/train_sft.py on top of the Qwen2.5-7B
+Loads a LoRA checkpoint trained by scripts/case_study/train_sft.py on top of the Qwen2.5-7B
 base. Without this in the comparison table, the GRPO contribution is unverifiable.
 
 The three-way comparison is:
   qwen_base_policy  (untrained)  →  qwen_sft_policy  (SFT warmup)  →  grpo_policy  (GRPO)
 
 Run on the same GPU box used for training:
-  CHECKPOINT_PATH=checkpoints/sft_qwen_7b/final python scripts/run_eval.py \
+  CHECKPOINT_PATH=checkpoints/sft_qwen_7b/final python scripts/case_study/run_eval.py \
       --musique --split dev --policy qwen_sft_policy -t 50
 """
 

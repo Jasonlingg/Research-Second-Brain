@@ -214,7 +214,7 @@ artifacts and commands. The original comparison can be checked without a
 network, GPU, endpoint, or package installation:
 
 ```bash
-python scripts/reproduce_case_study.py
+python scripts/case_study/reproduce_case_study.py
 python -m benchmarks.envoybench.qasper_official score \
   --run-dir release/envoybench-v0.1/run
 ```

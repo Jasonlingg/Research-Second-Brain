@@ -46,10 +46,10 @@ from benchmarks.envoybench.runtime_support import (
 from src.env.corpus import Corpus
 from src.env.reward import REWARD_VERSION
 from src.env.tools import SEARCH_PROTOCOL_VERSION, TOOL_PREAMBLE
-from src.eval.artifacts import configuration_hash
-from src.eval.harness import EvalResult, run_eval
+from src.experiments.eval.harness import EvalResult, run_eval
 from src.policies.code_execution import QASPER_SYSTEM_PROMPT
 from src.policies.openai_compatible import OpenAICompatiblePolicy
+from src.shared.artifacts import configuration_hash
 
 RUN_SCHEMA = "envoybench-run-v1"
 
@@ -78,7 +78,7 @@ def _git_commit() -> str | None:
 def _implementation_hashes() -> dict[str, str]:
     paths = [
         "src/env/document_env.py", "src/env/repl.py", "src/env/repl_worker.py",
-        "src/env/tools.py", "src/env/reward.py", "src/eval/harness.py",
+        "src/env/tools.py", "src/env/reward.py", "src/experiments/eval/harness.py",
         "src/policies/code_execution.py", "src/policies/openai_compatible.py",
         "benchmarks/envoybench/run.py", "benchmarks/envoybench/budget.py",
         "benchmarks/envoybench/frozen_dataset.py",

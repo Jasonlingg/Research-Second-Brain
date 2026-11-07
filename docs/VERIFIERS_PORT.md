@@ -63,14 +63,14 @@ this trial cannot satisfy that second gate.
 
 ## What changed
 
-- `src/training/verifiers_adapter.py`: 0.4-specific Task, Taskset, Harness and Env
+- `src/experiments/training/verifiers_adapter.py`: 0.4-specific Task, Taskset, Harness and Env
   classes. Calls the existing `collect()` instead of implementing another agent
   loop. The native VF interception server captures every model request and raw
   response. Task scoring calls the unchanged narrow short-fact reward.
 - `environments/envoy_reader/`: a small installable `envoy-reader` package that
   exposes the `envoy_reader` plugin through Verifiers' discovery interface.
 - `requirements-verifiers.txt`: optional dependency/plugin installation.
-- `tests/test_verifiers_reader.py`: actual native Agent/interception integration,
+- `tests/case_study/test_verifiers_reader.py`: actual native Agent/interception integration,
   Docker controls and focused lifecycle/failure tests.
 - `examples/verifiers-port/`: public authored control fixtures and compact saved
   evidence. No sampled training probabilities are invented.
@@ -135,7 +135,7 @@ out/verifiers-clean/bin/python -m pip install -e . -r requirements-verifiers.txt
   pytest==8.4.2 pytest-asyncio==1.3.0
 PATH="$HOME/.local/bin:$PATH" HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
   out/verifiers-clean/bin/python -m pytest -q \
-  tests/test_verifiers_reader.py tests/test_reader_rl_data.py \
+  tests/case_study/test_verifiers_reader.py tests/case_study/test_reader_rl_data.py \
   --basetemp out/verifiers-replay-receipts
 ```
 
@@ -198,7 +198,7 @@ as Verifiers 0.4.0. Pin `renderer_model_name` to the locally cached tokenizer
 snapshot at Qwen/Qwen3-8B revision
 `b968826d9c46dd6066d109eabc6255188de91218`; an unpinned model alias is insufficient.
 
-`tests/test_verifiers_tokens.py` drives the real native TrainClient, renderer and
+`tests/case_study/test_verifiers_tokens.py` drives the real native TrainClient, renderer and
 trace graph through an in-memory HTTP transport. A one-layer, random-initialized
 Qwen3 model on CPU samples four tokens per turn for three turns, with actual
 temperature-1/top-p-1 sampling log-probabilities. This checks transport and mask
@@ -230,7 +230,7 @@ Reproduce token checks in the optional environment with CPU PyTorch 2.10.0 added
 
 ```sh
 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 python -m pytest -q \
-  tests/test_verifiers_tokens.py
+  tests/case_study/test_verifiers_tokens.py
 ```
 
 The pinned tokenizer must already be cached. Missing optional dependencies or

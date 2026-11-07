@@ -6,7 +6,7 @@ import json
 import re
 from pathlib import Path
 
-from src.eval.artifacts import configuration_hash
+from src.shared.artifacts import configuration_hash
 
 SCHEMA_VERSION = "research-benchmark-v1"
 REVIEW_SCHEMA_VERSION = "research-human-review-v1"

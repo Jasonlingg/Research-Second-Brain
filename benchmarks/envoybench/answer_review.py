@@ -20,9 +20,9 @@ from pathlib import Path
 from typing import Iterator
 
 from benchmarks.envoybench.score import REVIEW_VERSION, RUBRIC_VERSION, _review_content
-from src.eval.artifacts import configuration_hash, content_hash
-from src.eval.research_review import load_corpus
+from src.experiments.eval.research_review import load_corpus
 from src.research.benchmark import validate_benchmark
+from src.shared.artifacts import configuration_hash, content_hash
 
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 _ROW_FIELDS = {

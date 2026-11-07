@@ -78,5 +78,5 @@ undo side effects. The local worker keeps state in one process instead.
 
 Implementation: [historical REPL backends](../src/env/repl.py),
 [hardened backend](../src/env/hardened_repl.py), [sandbox image](../Dockerfile),
-[REPL tests](../tests/test_repl.py). Training gates and verification results are in
+[REPL tests](../tests/case_study/test_repl.py). Training gates and verification results are in
 the [GPU readiness report](https://github.com/Jasonlingg/Qwen-Envoy/blob/archive-full/docs/GPU_TRAINING_READINESS.md).

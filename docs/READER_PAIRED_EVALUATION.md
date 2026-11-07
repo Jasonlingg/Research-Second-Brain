@@ -13,7 +13,7 @@ it does not supply semantic judgments or evidence that RL improved Qwen.
 
 ## What is connected
 
-`src/training/reader_evaluation.py` reuses the frozen investigator, Docker sandbox,
+`src/experiments/training/reader_evaluation.py` reuses the frozen investigator, Docker sandbox,
 Verifiers 0.4 native TrainClient and pinned non-thinking renderer. Here TrainClient
 is a token transport: evaluation tasks have no reward function, traces stay
 untrainable, and no TrainSink or optimizer is called. The ordinary training
@@ -115,7 +115,7 @@ was run against a real model in this preparation pass.
 1. On the machine with the completed training run:
 
    ```sh
-   python -m src.training.reader_evaluation freeze /path/eval-session --training /path/training-run
+   python -m src.experiments.training.reader_evaluation freeze /path/eval-session --training /path/training-run
    ```
 
 2. Copy the frozen session to the Docker controller. Keep its initial files
@@ -123,7 +123,7 @@ was run against a real model in this preparation pass.
    with real attribution **before seeing model outputs**:
 
    ```sh
-   python -m src.training.reader_evaluation open-references /path/eval-session
+   python -m src.experiments.training.reader_evaluation open-references /path/eval-session
    ```
 
 3. For each arm, in order `unchanged_v5`, `final_rl_step_10`: start a fresh native
@@ -133,14 +133,14 @@ was run against a real model in this preparation pass.
    the GPU host, with the same frozen session:
 
    ```sh
-   python -m src.training.reader_evaluation load-arm /path/eval-session \
+   python -m src.experiments.training.reader_evaluation load-arm /path/eval-session \
      --arm unchanged_v5 --engine http://127.0.0.1:8000
    ```
 
    Copy that arm's `backend.json` to the controller. Through the SSH forward:
 
    ```sh
-   python -m src.training.reader_evaluation collect-arm /path/eval-session \
+   python -m src.experiments.training.reader_evaluation collect-arm /path/eval-session \
      --arm unchanged_v5 --engine http://127.0.0.1:18000 \
      --tokenizer /path/b968826d9c46dd6066d109eabc6255188de91218 \
      --backend-receipt /path/eval-session/unchanged_v5/backend.json
@@ -153,8 +153,8 @@ was run against a real model in this preparation pass.
    and apply the gate:
 
    ```sh
-   python -m src.training.reader_evaluation export-review /path/eval-session
-   python -m src.training.reader_evaluation summarize /path/eval-session
+   python -m src.experiments.training.reader_evaluation export-review /path/eval-session
+   python -m src.experiments.training.reader_evaluation summarize /path/eval-session
    ```
 
    Supply `lifecycle.json` with session SHA, `cost_kind: provider_billed`, actual

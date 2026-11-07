@@ -79,7 +79,7 @@ accepted insufficient-evidence cases instead of ten.
 
 The student predicts one next Python action or `SUBMIT:` answer at a time.
 Earlier instructions, actions, and tool observations remain in context but are
-masked out of the loss. In [train_sft.py](../scripts/train_sft.py),
+masked out of the loss. In [train_sft.py](../scripts/case_study/train_sft.py),
 `_expand_per_action()` constructs those examples and `_tokenize_per_action()`
 checks that each training prefix equals Qwen3's inference prefix with thinking
 disabled. It refuses a prefix mismatch or a sequence that would truncate the
@@ -378,8 +378,8 @@ September 30 outputs and grades.
 From the repository root, use the standard-library-only checker:
 
 ```bash
-python scripts/reproduce_case_study.py
-python scripts/reproduce_case_study.py --json
+python scripts/case_study/reproduce_case_study.py
+python scripts/case_study/reproduce_case_study.py --json
 python -m benchmarks.envoybench.qasper_official score \
   --run-dir release/envoybench-v0.1/run
 ```
@@ -405,7 +405,7 @@ python -m benchmarks.envoybench.verify \
   --review-dir release/envoybench-v0.1/review-prepared \
   --judged-review release/envoybench-v0.1/review-model-assisted/review.json \
   --provisional
-python scripts/launch_studio.py
+python scripts/case_study/launch_studio.py
 ```
 
 The builder may download the pinned QASPER source if uncached. The verifier
@@ -418,7 +418,7 @@ For a code review or interview, these are concrete entry points:
 
 | Inspect | Engineering question |
 | --- | --- |
-| [Training preprocessing](../scripts/train_sft.py) and [prefix/masking tests](../tests/test_train_sft.py) | Does the loss supervise the intended next action under the same prefix used at inference? |
+| [Training preprocessing](../scripts/case_study/train_sft.py) and [prefix/masking tests](../tests/case_study/test_train_sft.py) | Does the loss supervise the intended next action under the same prefix used at inference? |
 | [Tool API](../src/env/tools.py) and [REPL](../src/env/repl.py) | How are reads bounded, offsets returned, observations truncated, and episode state executed? |
 | [Evaluation runner](../benchmarks/envoybench/run.py) | Which model, corpus, decoding, sandbox, and implementation identities are recorded? |
 | [Scoring and artifact bindings](../benchmarks/envoybench/score.py) | Can a changed result, missing response, or mismatched review silently enter a score? |

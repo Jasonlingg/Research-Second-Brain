@@ -7,10 +7,10 @@ import threading
 from html import escape
 
 from src.env.tools import SEARCH_PROTOCOL_VERSION
-from src.product.arxiv_library import ArxivLibrary
-from src.product.net import SourceUnavailable, Throttle
-from src.product.packet_verifier import TOOL_PREAMBLE_SHA256
+from src.mcp.arxiv_library import ArxivLibrary
+from src.mcp.net import SourceUnavailable, Throttle
 from src.research.agent import load_snapshot
+from src.workers.packet_verifier import TOOL_PREAMBLE_SHA256
 
 
 def abs_page(version: str, title: str = "KV Cache Compression",

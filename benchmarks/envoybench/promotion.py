@@ -11,7 +11,7 @@ from __future__ import annotations
 from datetime import date
 from math import comb
 
-from src.eval.artifacts import configuration_hash
+from src.shared.artifacts import configuration_hash
 
 RULE_VERSION = "envoybench-base-v5-promotion-v1"
 FULL_QUESTION_COUNT = 40

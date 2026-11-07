@@ -137,7 +137,7 @@ development loop and disclose previous test inspection.
 
 ## Implemented repair
 
-`scripts/train_sft.py` now defaults to per-action supervision. It expands each
+`scripts/case_study/train_sft.py` now defaults to per-action supervision. It expands each
 trajectory into one example for every assistant action, retains the complete
 history before that action, and constructs labels only for the target action.
 Before loading the model, it verifies at token level that every training sequence

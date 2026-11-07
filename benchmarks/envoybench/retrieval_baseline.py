@@ -31,9 +31,9 @@ from benchmarks.envoybench.run import (
     load_split,
 )
 from src.env.reward import parse_submission_details
-from src.eval.artifacts import configuration_hash
-from src.eval.research_review import load_corpus, materialize_evidence
+from src.experiments.eval.research_review import load_corpus, materialize_evidence
 from src.policies.openai_compatible import _chat_completions_url, _post_json, _text_content
+from src.shared.artifacts import configuration_hash
 
 VERSION = "envoybench-known-paper-bm25-v1"
 PREPARED_SCHEMA = "envoybench-retrieval-prepared-v1"

@@ -12,7 +12,7 @@ from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from src.eval.artifacts import content_hash
+from src.shared.artifacts import content_hash
 
 ARXIV_ID = re.compile(r"\d{4}\.\d{4,5}(?:v\d+)?")
 PARSER_VERSION = "arxiv-paragraphs-v1"

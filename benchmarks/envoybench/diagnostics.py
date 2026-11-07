@@ -10,7 +10,7 @@ import json
 import re
 from pathlib import Path
 
-from src.eval.artifacts import configuration_hash
+from src.shared.artifacts import configuration_hash
 
 DEFAULT_CASE_STUDY = Path(__file__).with_name("case_study_20260930.json")
 DEFAULT_BEHAVIOR_REVIEW = Path(__file__).with_name("response_behavior_20260930.json")

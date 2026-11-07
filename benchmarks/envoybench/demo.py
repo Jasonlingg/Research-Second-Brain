@@ -35,8 +35,8 @@ from benchmarks.envoybench.saved_payload import (
     build_demo_payload,
 )
 from benchmarks.envoybench.score import _validated_references
-from src.eval.artifacts import configuration_hash
-from src.eval.research_review import load_corpus
+from src.experiments.eval.research_review import load_corpus
+from src.shared.artifacts import configuration_hash
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_REFERENCE_REVIEW = HERE.parents[1] / "out/envoybench/test-reference-review.json"

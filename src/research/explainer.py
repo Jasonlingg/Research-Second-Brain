@@ -11,7 +11,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 from uuid import uuid4
 
-from src.eval.artifacts import configuration_hash
+from src.shared.artifacts import configuration_hash
 
 PACKET_VERSION = "research-evidence-packet-v1"
 EXPLANATION_VERSION = "research-explanation-v1"

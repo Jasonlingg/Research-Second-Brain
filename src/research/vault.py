@@ -13,7 +13,7 @@ from urllib.parse import quote, urlencode
 
 import yaml
 
-from src.eval.artifacts import content_hash
+from src.shared.artifacts import content_hash
 from src.research.agent import load_snapshot
 from src.research.explainer import check_explanation
 

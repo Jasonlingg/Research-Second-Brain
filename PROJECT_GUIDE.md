@@ -1,13 +1,31 @@
-# Qwen Envoy project guide
+# Envoy project guide
 
-Start with the [README](README.md) for scope, results, and three code entry points.
+Choose [the research MCP](mcp/README.md) or [the Qwen case study](case-study/README.md).
+The [README](README.md) explains how they relate. Commands below run from the
+repository root. Code now lives in separate MCP, worker and experiment packages;
+saved data and release artifacts retain their original locations.
+
+## Check one path
+
+After installing that path's dependencies:
+
+```bash
+python -m pytest -c pytest-mcp.ini
+python -m pytest -c pytest-case-study.ini
+```
+
+The first checks the MCP, paper sources, records and Obsidian without corpus
+downloads or training packages. The second checks agent execution, optional
+reader integrations, SFT/RL interfaces, evaluation and Studio. Their explicit
+test directories partition the full suite; `tests/mcp/test_repository_layout.py`
+catches unassigned tests. Full-suite CI remains alongside a separate MCP job.
 
 ## Reproduce the saved QASPER study
 
 From the repository root, verify packaged files and recompute the paired counts with the Python standard library:
 
 ```bash
-python -I -S scripts/reproduce_case_study.py
+python -I -S scripts/case_study/reproduce_case_study.py
 ```
 
 To recompute official QASPER Answer F1 after installing project dependencies:
@@ -20,7 +38,7 @@ To open Studio locally:
 
 ```bash
 python -m pip install -e '.[viewer]'
-python scripts/launch_studio.py
+python scripts/case_study/launch_studio.py
 ```
 
 Studio loads saved runs by default; opening it does not launch inference. The [release README](release/qasper-agent-study/README.md) lists artifacts and checks. The [technical case study](docs/TECHNICAL_CASE_STUDY.md) explains the action loop, dataset, prefix bug, and failures. The [training record](release/qwen-v5-training/README.md) identifies the adapter. A new live run requires a compatible model endpoint, Docker, and the recorded configuration. Saved replay cannot measure how the model would respond to new feedback.
@@ -42,14 +60,14 @@ The optional personal MCP exposes paper discovery, bounded source inspection, ex
 
 ```bash
 python -m pip install -e '.[mcp]'
-python scripts/research_justification_mcp.py
+python scripts/mcp/research_justification_mcp.py
 ```
 
 It is a stdio server; an MCP client starts that command and communicates over stdin/stdout. See [client configuration and tool workflow](docs/RESEARCH_JUSTIFICATIONS.md). New arXiv searches use the public network; local records do not need a model endpoint. Nemotron explanation uses a separately configured Nebius API key. The [saved browser inspector](https://jasonlingg.github.io/Qwen-Envoy/research-mcp/) is a recorded demo, not a live MCP connection.
 
 ## Open the research history in Obsidian
 
-Run `python scripts/export_research_vault.py` to create a linked reading vault at
+Run `python scripts/mcp/export_research_vault.py` to create a linked reading vault at
 `out/envoy-research-vault`, or add `--refresh` to update an existing export.
 In Obsidian, choose **Open folder as vault** and select that folder, then open
 `Home.md`. Keep your own annotations in `My Notes`, outside the generated folders.
@@ -64,7 +82,7 @@ two-way sync or MCP indexing of personal notes. See
 
 ## Experimental RL continuation
 
-The [October 26 Prime-RL/Verifiers pilot](docs/READER_RL_PILOT_20261026.md) completed nine of ten planned updates from v5. A generation timeout interrupted update ten. Exploratory paired evaluation found one complete supported answer in each arm on ten clear-reference questions; no quality gain was established. The [protocol](docs/READER_PAIRED_EVALUATION.md) and [training code](src/training/) are retained for inspection.
+The [October 26 Prime-RL/Verifiers pilot](docs/READER_RL_PILOT_20261026.md) completed nine of ten planned updates from v5. A generation timeout interrupted update ten. Exploratory paired evaluation found one complete supported answer in each arm on ten clear-reference questions; no quality gain was established. The [protocol](docs/READER_PAIRED_EVALUATION.md) and [training code](src/experiments/training/) are retained for inspection.
 
 ## Evidence boundaries
 

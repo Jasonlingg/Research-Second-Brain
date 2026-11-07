@@ -6,7 +6,7 @@ The base → sft → grpo delta is the primary claim of the project:
   - sft → grpo: multi-hop exploration strategy learned via RL
 
 Run on the same GPU box used for training:
-  CHECKPOINT_PATH=checkpoints/grpo_qwen_7b/final python scripts/run_eval.py \
+  CHECKPOINT_PATH=checkpoints/grpo_qwen_7b/final python scripts/case_study/run_eval.py \
       --musique --split test --policy grpo_policy
 """
 

@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from src.eval.artifacts import content_hash
+from src.shared.artifacts import content_hash
 from src.research.explainer import PACKET_VERSION
 
 MAX_EVIDENCE_SPANS = 5

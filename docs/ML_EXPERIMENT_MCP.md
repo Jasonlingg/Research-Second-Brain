@@ -31,7 +31,7 @@ Install the existing project dependencies, then run the stdio server:
 
 ```bash
 pip install -e '.[mcp,vault]'
-python scripts/ml_experiment_mcp.py \
+python scripts/mcp/ml_experiment_mcp.py \
   --store-root ~/.envoy/ml-experiments \
   --library-root ~/.envoy/arxiv-library \
   --artifact-root /absolute/path/to/selected-run-exports
@@ -51,7 +51,7 @@ client. For Codex, an example project-local `.codex/config.toml` entry is:
 ```toml
 [mcp_servers.ml-experiments]
 command = "/absolute/path/to/python"
-args = ["/absolute/path/to/rlm-explorer/scripts/ml_experiment_mcp.py", "--store-root", "/absolute/path/to/experiment-records", "--artifact-root", "/absolute/path/to/selected-run-exports", "--library-root", "/absolute/path/to/paper-cache"]
+args = ["/absolute/path/to/rlm-explorer/scripts/mcp/ml_experiment_mcp.py", "--store-root", "/absolute/path/to/experiment-records", "--artifact-root", "/absolute/path/to/selected-run-exports", "--library-root", "/absolute/path/to/paper-cache"]
 cwd = "/absolute/path/to/rlm-explorer"
 startup_timeout_sec = 30
 tool_timeout_sec = 30
@@ -217,7 +217,7 @@ across the experiment modules and existing arXiv server/profile tests. Ruff and
 whitespace checks pass. Reproduce the focused checks:
 
 ```bash
-python -m pytest -q tests/test_ml_experiment*.py tests/test_arxiv_mcp_profiles.py tests/test_arxiv_research_mcp.py
+python -m pytest -q tests/test_ml_experiment*.py tests/mcp/test_arxiv_mcp_profiles.py tests/mcp/test_arxiv_research_mcp.py
 ```
 
 Task 6's independent assistant code review found two validation/boundary gaps;

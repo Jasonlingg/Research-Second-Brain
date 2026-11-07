@@ -18,7 +18,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from src.eval.abstention import is_abstention as is_protocol_abstention
+from src.shared.abstention import is_abstention as is_protocol_abstention
 
 DOCUMENT_TOOLS = {
     "search",

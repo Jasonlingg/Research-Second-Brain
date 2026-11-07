@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Callable, Iterator
 
 from benchmarks.envoybench.score import REVIEW_VERSION, RUBRIC_VERSION, _review_content
-from src.eval.artifacts import configuration_hash
+from src.shared.artifacts import configuration_hash
 
 DEFAULT_MODEL = "claude-sonnet-5"
 JUDGE_VERSION = "envoybench-provisional-judge-v1"

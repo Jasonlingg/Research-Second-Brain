@@ -50,7 +50,7 @@ Create a local Obsidian vault from the curated experiment atlas and the saved
 Envoy research records:
 
 ```sh
-python scripts/export_research_vault.py
+python scripts/mcp/export_research_vault.py
 ```
 
 Open `out/envoy-research-vault` as a folder vault in Obsidian, then start at
@@ -77,7 +77,7 @@ Use `--obsidian-vault /path/to/vault` to select another dedicated generated vaul
 server's active store and `~/.envoy/research-second-brain/records`.
 The older MCP entry points do not enable this hook.
 
-Run `python scripts/export_research_vault.py --refresh` to refresh manually,
+Run `python scripts/mcp/export_research_vault.py --refresh` to refresh manually,
 including after changing repository reports. `Home.md` shows the refresh time
 and source checkout; `.envoy-export.json`
 records the store paths, atlas hash, counts, and hashes of generated files.
@@ -190,7 +190,7 @@ into the MCP: normal use starts from your own question.
 ## Start locally
 
 ```sh
-python scripts/experiment_mode_extended_mcp.py \
+python scripts/mcp/experiment_mode_extended_mcp.py \
   --store-root ~/.envoy/ml-experiments \
   --library-root ~/.envoy/arxiv-library \
   --artifact-root /absolute/path/to/selected-sanitized-run-exports
@@ -212,7 +212,7 @@ these are configuration examples, not credentials or automatic installation.
     "envoy-experiments": {
       "command": "/absolute/path/to/python",
       "args": [
-        "/absolute/path/to/rlm-explorer/scripts/experiment_mode_extended_mcp.py",
+        "/absolute/path/to/rlm-explorer/scripts/mcp/experiment_mode_extended_mcp.py",
         "--store-root", "~/.envoy/ml-experiments",
         "--library-root", "~/.envoy/arxiv-library"
       ]

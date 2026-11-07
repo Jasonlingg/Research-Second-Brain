@@ -32,15 +32,15 @@ from benchmarks.envoybench.runtime_support import (
 )
 from src.policies.code_execution import clean_action
 from src.policies.openai_compatible import OpenAICompatiblePolicy
-from src.product.qwen_investigator import (
+from src.research.code_exec_packet import MAX_EVIDENCE_SPANS, MAX_QUESTION_CHARS
+from src.research.file_sources import MAX_FILE_BYTES, build_file_snapshot, load_file_snapshot
+from src.research.web_sources import canonicalize_web_url, fetch_public_pdf
+from src.workers.qwen_investigator import (
     MAX_ACTION_CHARS,
     NEMOTRON_PAPER_SYSTEM_PROMPT,
     PUBLIC_PAPER_SYSTEM_PROMPT,
     QwenInvestigator,
 )
-from src.research.code_exec_packet import MAX_EVIDENCE_SPANS, MAX_QUESTION_CHARS
-from src.research.file_sources import MAX_FILE_BYTES, build_file_snapshot, load_file_snapshot
-from src.research.web_sources import canonicalize_web_url, fetch_public_pdf
 
 MAX_STEPS = 12
 MODEL_TIMEOUT_SECONDS = 60

@@ -1,104 +1,82 @@
 # Envoy
 
-[![Case study checks](https://github.com/Jasonlingg/Qwen-Envoy/actions/workflows/release-check.yml/badge.svg)](https://github.com/Jasonlingg/Qwen-Envoy/actions/workflows/release-check.yml)
+**Research memory for ML experiments, with a reproducible Qwen case study.**
 
-**Research memory for ML experiments.**
+This repository has two paths. Choose the one you want to use or inspect:
 
-Envoy is a personal second brain for keeping track of papers, experiments, and
-the decisions between them. It connects to your assistant through MCP and
-exports linked notes to Obsidian.
+| | Start here | What it does |
+| --- | --- | --- |
+| **Research MCP** | [Use Envoy](mcp/README.md) | Connect papers, experiment results and decisions across sessions; browse linked notes in Obsidian. |
+| **Qwen case study** | [Inspect the study](case-study/README.md) | Inspect Qwen3-8B SFT, the exploratory RL pilot, saved QASPER evaluation and Agent Studio. |
 
-Before starting another training run, you can ask:
-
-> What have we already tried to reduce Qwen's false refusals? Show me the results
-> and the evidence behind our last decision.
-
-The assistant retrieves previous attempts, inspects their source artifacts,
-looks up papers, and saves useful findings or decisions for a later session.
-Envoy supplies the records and tools; the assistant interprets the evidence.
-
-## What works today
-
-- **Find previous work:** search the curated experiment history and saved records.
-- **Inspect paper evidence:** discover arXiv papers and read bounded source passages.
-- **Keep a research trail:** connect questions, findings, results, and decisions
-  while preserving revisions and source references.
-- **Browse in Obsidian:** successful MCP saves refresh linked notes, preserving
-  personal folders and Obsidian settings.
+The MCP gives your assistant access to research records. The case study is one
+body of evidence it can consult; running the MCP does not train or evaluate Qwen.
 
 ```text
-Your assistant → Envoy MCP → Paper tools + saved experiment records
-                                      ↓
-                              Linked Obsidian notes
+Your assistant → Research MCP → Papers + experiment records → Obsidian
+                                      ↑
+                             Saved Qwen experiments
+
+Qwen case study → Training / evaluation → Saved results + Agent Studio
 ```
 
-Recall currently uses word overlap. Personal Obsidian notes do not sync back
-into MCP recall. A PyTorch memory ranker is under investigation and is not yet
-integrated.
+## Research MCP
 
-## Try it
-
-From the repository root, with Python 3.10 or newer:
+Ask: “What have we already tried to reduce Qwen's false refusals, and what
+evidence informed our last decision?” The assistant finds prior attempts,
+inspects sources, and saves findings or decisions for later sessions.
 
 ```bash
 python -m pip install -e '.[mcp,vault]'
+python scripts/mcp/research_justification_mcp.py
 ```
 
-Configure your MCP client to launch:
+The second command starts a stdio server, normally launched by your MCP client.
+Core tools need no GPU, training packages or model API key. See
+[setup and limitations](mcp/README.md).
 
-```bash
-python /absolute/path/to/rlm-explorer/scripts/research_justification_mcp.py
-```
+## Qwen case study
 
-See [client setup](docs/RESEARCH_JUSTIFICATIONS.md#connect-an-mcp-client) for
-configuration examples. Core tools need no GPU or model API key. New paper
-searches use the public network; Nemotron tools are opt-in.
-
-To create the Obsidian view before saving any records:
-
-```bash
-python scripts/export_research_vault.py
-```
-
-Open `out/envoy-research-vault` as a vault in Obsidian and start at `Home.md`.
-Keep annotations in `My Notes`, outside the generated folders. For an existing
-export, add `--refresh`. See [refresh and backup details](docs/EXPERIMENT_MODE.md#browse-the-research-history-in-obsidian).
-
-## The Qwen case study
-
-Envoy grew out of a Qwen3-8B paper agent that writes Python inside Docker.
-Its training recipe, data, saved evaluation, and **QASPER Agent Studio** remain
-available to inspect.
-
-[Open Studio](https://jasonlingg.github.io/Qwen-Envoy/) ·
+[Open saved Studio](https://jasonlingg.github.io/Qwen-Envoy/) ·
 [Findings](docs/QASPER_AGENT_STUDY.md) ·
 [Technical walkthrough](docs/TECHNICAL_CASE_STUDY.md)
 
 On 40 selected QASPER development questions, episodes without recorded execution
 errors increased from **18/40 to 39/40** after SFT. Provisional, model-assisted
 supported-answer passes on the 20 answerable questions remained **3/20 in both
-runs**. The 44 demonstrations include AI repairs. QASPER is from Dasigi et al.
-(2021); this is not an official full-test result or independently human-reviewed
-answer-quality improvement. The later Prime-RL pilot established no quality gain.
+runs**. The 44 demonstrations include AI repairs. The RL pilot established no
+answer-quality gain. This is not an official full-test or independently
+human-reviewed improvement result.
 
-Recount the saved comparison and verify packaged hashes without dependencies,
-network access, or a model:
+Recompute saved counts and verify packaged hashes without dependencies or network:
 
 ```bash
-python -I -S scripts/reproduce_case_study.py
+python -I -S scripts/case_study/reproduce_case_study.py
 ```
 
-For a code review, start with the [training script](scripts/train_sft.py),
-[Docker boundary](src/env/repl.py), and
-[result checker](scripts/reproduce_case_study.py).
-The [project guide](PROJECT_GUIDE.md) covers training preflight, local Studio,
-and tests. See the [repository map](docs/REPOSITORY_LAYOUT.md) for other entry
-points and [`archive-full`](https://github.com/Jasonlingg/Qwen-Envoy/tree/archive-full)
-for historical prototypes.
+## Development
 
-## What is established
+Run commands from the repository root:
 
-Envoy can recover source-linked experiment records. A small
-[paired pilot](docs/RESEARCH_MCP_PAIRED_PILOT_20261026.md) did not establish a
-workflow advantage over web research plus Markdown notes. Source hashes and
-exact quotations establish provenance, not whether a conclusion is correct.
+| Check | Command |
+| --- | --- |
+| MCP and Obsidian tests | `python -m pytest -c pytest-mcp.ini` |
+| Agent, training, evaluation and Studio tests | `python -m pytest -c pytest-case-study.ini` |
+| Entire repository | `python -m pytest -q` |
+
+See each path's README for dependencies. The implementation is physically split:
+
+```text
+src/mcp/                  Records, decisions, paper sources and Obsidian
+src/workers/              Optional Qwen and other document readers
+src/experiments/          Training and evaluation implementation
+scripts/mcp/              MCP servers and vault exporter
+scripts/case_study/       Training, replay and evaluation commands
+tests/mcp/                MCP tests
+tests/case_study/         Agent, training and evaluation tests
+```
+
+Saved data and release evidence stay in place. The
+[repository map](docs/REPOSITORY_LAYOUT.md) explains shared code and historical paths;
+[the project guide](PROJECT_GUIDE.md) has full-suite setup. Historical prototypes
+remain at [`archive-full`](https://github.com/Jasonlingg/Qwen-Envoy/tree/archive-full).

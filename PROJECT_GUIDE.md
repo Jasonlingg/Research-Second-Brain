@@ -63,7 +63,7 @@ python -m pip install -e '.[mcp]'
 python scripts/mcp/research_justification_mcp.py
 ```
 
-It is a stdio server; an MCP client starts that command and communicates over stdin/stdout. See [client configuration and tool workflow](docs/RESEARCH_JUSTIFICATIONS.md). New arXiv searches use the public network; local records do not need a model endpoint. Nemotron explanation uses a separately configured Nebius API key. The [saved browser inspector](https://jasonlingg.github.io/Qwen-Envoy/research-mcp/) is a recorded demo, not a live MCP connection.
+It is a stdio server; an MCP client starts that command and communicates over stdin/stdout. See [client configuration and tool workflow](docs/RESEARCH_JUSTIFICATIONS.md). New arXiv searches use the public network; local records do not need a model endpoint. Nemotron explanation uses a separately configured Nebius API key. The [saved browser inspector](https://jasonlingg.github.io/Envoy/research-mcp/) is a recorded demo, not a live MCP connection.
 
 ## Open the research history in Obsidian
 

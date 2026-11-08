@@ -15,7 +15,7 @@ python -I -S scripts/case_study/reproduce_case_study.py
 This verifies packaged hashes and recomputes 40 paired questions. It does not
 run Qwen or independently assess semantic support.
 
-[Open saved Studio](https://jasonlingg.github.io/Qwen-Envoy/case-study/) ·
+[Open saved Studio](https://jasonlingg.github.io/Envoy/case-study/) ·
 [Findings](../docs/QASPER_AGENT_STUDY.md) ·
 [Technical walkthrough](../docs/TECHNICAL_CASE_STUDY.md)
 

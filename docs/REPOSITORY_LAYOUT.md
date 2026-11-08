@@ -46,7 +46,7 @@ is covered in the case-study suite. Shared test fixtures remain under `tests/`.
 module path. `data/`, `examples/` and `release/` preserve saved research evidence.
 The historical experiment server is now under `scripts/case_study/`; it is not
 the current product entry point. Old prototypes remain at
-[`archive-full`](https://github.com/Jasonlingg/Qwen-Envoy/tree/archive-full).
+[`archive-full`](https://github.com/Jasonlingg/Envoy/tree/archive-full).
 
 ## Historical identities
 

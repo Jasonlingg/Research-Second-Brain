@@ -1,4 +1,4 @@
-"""Read only explicitly selected JSON exports/cache files, without following symlinks."""
+"""Bounded reads of explicitly selected local sources, without following symlinks."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from src.mcp.ml_experiment_io import decode
 MAX_SOURCE_BYTES = 2 * 1_024 * 1_024
 
 
-def read_json(root: Path, relative: str):
+def read_bytes(root: Path, relative: str, *, max_bytes: int = MAX_SOURCE_BYTES):
     root = Path(root).expanduser().absolute()
     parts = relative.split("/")
     if (any(p in {"", ".", ".."} for p in parts) or "\\" in relative
@@ -31,13 +31,20 @@ def read_json(root: Path, relative: str):
             with os.fdopen(descriptor, "rb") as stream:
                 if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
                     raise ValueError("Selected source is not a regular file")
-                raw = stream.read(MAX_SOURCE_BYTES + 1)
-        return raw, decode(raw, max_bytes=MAX_SOURCE_BYTES)
+                raw = stream.read(max_bytes + 1)
+        if len(raw) > max_bytes:
+            raise ValueError("Selected source exceeds byte limit")
+        return raw
     except OSError as exc:
         raise ValueError("Selected JSON source is unavailable or unsafe") from exc
     finally:
         for descriptor in reversed(descriptors):
             os.close(descriptor)
+
+
+def read_json(root: Path, relative: str):
+    raw = read_bytes(root, relative)
+    return raw, decode(raw, max_bytes=MAX_SOURCE_BYTES)
 
 
 def select_pointer(value, pointer: str):

@@ -24,7 +24,7 @@ QASPER corpus downloads and Studio are not required to start this server.
 
 ## What it does
 
-- Find previous work in curated experiment history and saved records.
+- Find previous work in curated history, saved records and explicitly imported notes.
 - Discover arXiv papers and inspect bounded text passages.
 - Link questions, findings, measurements and decisions, preserving revisions.
 - Refresh linked Obsidian notes after successful MCP saves.
@@ -42,7 +42,7 @@ python scripts/mcp/export_research_vault.py
 
 Open `out/envoy-research-vault` as a vault and start at `Home.md`. Add `--refresh`
 for an existing export. Keep annotations in `My Notes`, outside generated
-folders. Personal notes do not sync into MCP recall. See
+folders. Personal notes can be explicitly imported; later edits do not automatically sync. See
 [refresh and backups](../docs/EXPERIMENT_MODE.md#browse-the-research-history-in-obsidian).
 
 Private records and caches live outside Git, normally under `~/.envoy/`.
@@ -70,7 +70,20 @@ integration is also tested in the [case-study suite](../case-study/README.md).
 
 ## Limits
 
-Recall uses word overlap. A PyTorch ranker and new Qwen memory workers are not
+Recall uses word overlap, including observation text. A PyTorch ranker and Qwen memory workers are not
 integrated. Source hashes and exact quotes establish provenance, not semantic
 support. The small [paired MCP pilot](../docs/RESEARCH_MCP_PAIRED_PILOT_20261026.md)
 did not establish an advantage over web research plus Markdown notes.
+
+## Import existing notes
+
+Preview selected Markdown or JSON files before saving them:
+
+```bash
+python scripts/mcp/import_memory.py preview \
+  --source-root /path/to/research --file notes/lora.md --file results/batching.json
+```
+
+Apply the same selection with its preview hash, or enable the equivalent MCP
+tools using `--import-root`. Imports become unreviewed, source-linked drafts,
+not verified measurements. See [import instructions and limits](../docs/MEMORY_IMPORT.md).

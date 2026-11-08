@@ -14,12 +14,13 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.mcp.arxiv_research_mcp import LOCAL  # noqa: E402
-from scripts.mcp.experiment_mode_extended_mcp import (
+from scripts.mcp.experiment_mode_extended_mcp import (  # noqa: E402
     create_server as experiment_server,  # noqa: E402
 )
-from scripts.mcp.ml_experiment_mcp import _errors  # noqa: E402
+from scripts.mcp.ml_experiment_mcp import SAVE, _errors  # noqa: E402
 from src.mcp.arxiv_library import ArxivLibrary  # noqa: E402
 from src.mcp.experiment_discovery import ExperimentDiscovery  # noqa: E402
+from src.mcp.memory_import import MemoryImport  # noqa: E402
 from src.mcp.ml_experiment_evidence import EvidenceResolver  # noqa: E402
 from src.mcp.ml_experiment_store import ExperimentStore  # noqa: E402
 from src.mcp.obsidian_refresh import ObsidianRefresh  # noqa: E402
@@ -28,10 +29,33 @@ from src.mcp.research_justification import justification_packet  # noqa: E402
 
 
 def create_server(store, library, discovery, *, nemotron_key=None,
-                  nemotron_transport=None, obsidian_vault=None, obsidian_stores=None):
+                  nemotron_transport=None, obsidian_vault=None, obsidian_stores=None,
+                  import_root=None):
     """Add one read-only view while retaining the pinned experiment-mode file."""
     server = experiment_server(store, library, discovery, nemotron_key=nemotron_key,
                                nemotron_transport=nemotron_transport)
+
+    if import_root is not None:
+        importer = MemoryImport(import_root)
+
+        @server.tool(annotations=LOCAL)
+        @_errors
+        def preview_memory_import(paths: list[str]) -> dict[str, Any]:
+            """Preview explicit .md/.json files inside the operator-selected import root.
+
+            No writes or directory scans. Inspect the preview before applying it.
+            """
+            return importer.preview(paths)
+
+        @server.tool(annotations=SAVE)
+        @_errors
+        def apply_memory_import(paths: list[str], preview_sha256: str) -> dict[str, Any]:
+            """Save the exact inspected preview as unreviewed, source-linked drafts.
+
+            Changed sources require a new preview. Retries preserve existing edits.
+            A partial result lists saved and failed files separately; no model calls.
+            """
+            return importer.apply(paths, preview_sha256, store)
 
     @server.prompt()
     def review_research_memory(question: str) -> str:
@@ -61,7 +85,9 @@ Mark any interpretation as caller-authored and unreviewed. Do not promote a
 plausible explanation into a tested rule. Do not overwrite or save anything.
 If the user later requests persistence, use the existing revision-checked note,
 question-view or decision tools, preserving the old record and its provenance.
-Obsidian is a reading projection; personal notes are not searched by these tools.
+Obsidian is a reading projection. Only explicitly imported personal notes are
+searchable; later edits are not automatically synced. Do not import more files
+while reviewing existing memory unless the user requests it.
 
 Research question JSON:
 """ + json.dumps({"question": question}, ensure_ascii=False)
@@ -86,6 +112,8 @@ def main():
     parser.add_argument("--store-root", type=Path, default=Path("~/.envoy/ml-experiments"))
     parser.add_argument("--library-root", type=Path, default=Path("~/.envoy/arxiv-library"))
     parser.add_argument("--artifact-root", type=Path)
+    parser.add_argument("--import-root", type=Path,
+                        help="Opt in to importing explicitly selected .md/.json files in this root")
     parser.add_argument("--obsidian-vault", type=Path,
                         default=ROOT / "out/envoy-research-vault",
                         help="Automatically refresh this reading vault after successful saves")
@@ -112,6 +140,7 @@ def main():
     discovery = ExperimentDiscovery(PaperDiscovery(library.root / "discovery-cache"))
     create_server(store, library, discovery,
                   nemotron_key=nemotron_key,
+                  import_root=args.import_root,
                   obsidian_vault=None if args.no_obsidian_refresh else args.obsidian_vault,
                   obsidian_stores=[store.files.root,
                                    Path("~/.envoy/research-second-brain/records"),

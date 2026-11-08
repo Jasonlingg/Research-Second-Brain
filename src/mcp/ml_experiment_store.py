@@ -108,7 +108,12 @@ class ExperimentStore(ExperimentOutcomes, ExperimentResearchNotes):
                 **self._research_view(research, research_note_id)}
 
     def save_brief(self, brief: dict, experiment_id: str | None = None,
-                   expected_revision: int | None = None) -> dict:
+                   expected_revision: int | None = None, *,
+                   creation_key: str | None = None) -> dict:
+        if creation_key is not None and (experiment_id is not None
+                or not isinstance(creation_key, str)
+                or not re.fullmatch(r"[0-9a-f]{64}", creation_key)):
+            raise ValueError("creation_key must be a SHA-256 for a new record")
         # Copy through bounded JSON: caller-owned dictionaries cannot mutate saved state.
         parsed = ExperimentBrief.model_validate(decode(encode(brief)))
         receipts = self.evidence_resolver(parsed.references) if self.evidence_resolver else []
@@ -116,12 +121,17 @@ class ExperimentStore(ExperimentOutcomes, ExperimentResearchNotes):
             if experiment_id is None:
                 if expected_revision is not None:
                     raise ValueError("A new experiment must not supply expected_revision")
-                experiment_id = f"experiment_{uuid4().hex}"
+                experiment_id = f"experiment_{creation_key[:32] if creation_key else uuid4().hex}"
                 try:
                     os.stat(f"{experiment_id}.json", dir_fd=directory, follow_symlinks=False)
                 except FileNotFoundError:
                     pass
                 else:
+                    if creation_key:
+                        existing = self._load(directory, experiment_id)
+                        if existing[1][0].brief != parsed:
+                            raise ValueError("Import identity conflicts with an existing record")
+                        return self._view(*existing)
                     raise ValueError("Generated experiment ID already exists; retry creation")
                 revisions, plan, pointers, research, research_pointers = [], None, [], [], []
             else:
@@ -217,6 +227,7 @@ class ExperimentStore(ExperimentOutcomes, ExperimentResearchNotes):
                 brief = revisions[-1].brief
                 fields = ((brief.question, 4), (brief.hypothesis or "", 2),
                           (brief.proposed_change or "", 2),
+                          (" ".join(item.text for item in brief.observations), 1),
                           (" ".join(brief.unknowns), 1))
                 hits = {term for value, _ in fields for term in query & _terms(value)}
                 score = sum(weight * len(query & _terms(value)) for value, weight in fields)

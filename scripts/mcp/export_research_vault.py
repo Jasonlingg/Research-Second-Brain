@@ -120,8 +120,15 @@ def _export_store(vault: Path, root: Path) -> tuple[dict[str, str], dict[str, st
         for title, key in (("Goal", "goal"), ("Proposed change", "proposed_change"),
                            ("Hypothesis", "hypothesis"), ("Expected signal", "expected_signal"),
                            ("Constraints", "constraints"), ("Unknowns", "unknowns"),
-                           ("Decision criteria", "criteria")):
+                           ("Decision criteria", "criteria"), ("Limitations", "limitations")):
             section(lines, title, brief.get(key))
+        section(lines, "Source observations", [item["text"] for item in brief["observations"]])
+        if view["evidence_receipts"]:
+            lines.extend(["", "## Source receipts", ""])
+            for receipt in view["evidence_receipts"]:
+                lines.append(f"- {safe(receipt['reference_id'])}: "
+                             f"{safe(receipt['verification'])}; "
+                             f"SHA-256 `{safe(receipt['source_sha256'])}`")
         if view["plan_sha256"]:
             lines.extend(["", f"Frozen plan SHA-256: `{view['plan_sha256']}`"])
         lines.extend(["", "## Research notes", ""])

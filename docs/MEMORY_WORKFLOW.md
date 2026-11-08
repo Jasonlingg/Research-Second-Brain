@@ -34,7 +34,8 @@ its own model; this feature does not require Qwen, PyTorch or a GPU.
 Persistence remains explicit through the existing revision-checked tools. A
 correction should be a later note, question view or decision, with the earlier
 record identified, rather than an erased historical result. Obsidian refreshes
-after successful MCP saves; personal notes are not imported into recall.
+after successful MCP saves. Personal notes enter recall only through
+[explicit import](MEMORY_IMPORT.md); later edits are not synced automatically.
 
 For example, three updates in the first pilot and nine in the restarted pilot
 are different attempts. A review must inspect the run identities and receipts

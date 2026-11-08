@@ -61,9 +61,12 @@ class EvidenceResolver:
         return receipts
 
     def _artifact(self, ref):
-        if self.artifact_root is None:
+        # Reserved immutable imports live in the already-selected local library.
+        root = (self.library_root if ref.relative_path.startswith("envoy-imports/")
+                else self.artifact_root)
+        if root is None:
             raise ValueError("Local artifacts require an operator-selected --artifact-root")
-        raw, source = read_json(self.artifact_root, ref.relative_path)
+        raw, source = read_json(root, ref.relative_path)
         if digest(raw) != ref.sha256:
             raise ValueError("Artifact SHA-256 differs from the selected export")
         value = select_pointer(source, ref.json_pointer)

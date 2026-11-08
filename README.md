@@ -1,4 +1,4 @@
-# Envoy
+# Research Second Brain
 
 **Research memory for ML experiments, with a reproducible Qwen case study.**
 
@@ -6,7 +6,7 @@ This repository has two paths. Choose the one you want to use or inspect:
 
 | | Start here | What it does |
 | --- | --- | --- |
-| **Research MCP** | [Use Envoy](mcp/README.md) | Connect papers, experiment results and decisions across sessions; browse linked notes in Obsidian. |
+| **Research MCP** | [Use Research Second Brain](mcp/README.md) | Connect papers, experiment results and decisions across sessions; browse linked notes in Obsidian. |
 | **Qwen case study** | [Inspect the study](case-study/README.md) | Inspect Qwen3-8B SFT, the exploratory RL pilot, saved QASPER evaluation and Agent Studio. |
 
 The MCP gives your assistant access to research records. The case study is one
@@ -22,7 +22,7 @@ Qwen case study → Training / evaluation → Saved results + Agent Studio
 
 ## Research MCP
 
-[Recorded product walkthrough](https://jasonlingg.github.io/Envoy/) ·
+[Recorded product walkthrough](https://jasonlingg.github.io/Research-Second-Brain/) ·
 [Local preview](mcp/README.md#preview-the-public-walkthrough)
 
 Ask: “What have we already tried to reduce Qwen's false refusals, and what
@@ -40,7 +40,7 @@ Core tools need no GPU, training packages or model API key. See
 
 ## Qwen case study
 
-[Open saved Studio](https://jasonlingg.github.io/Envoy/case-study/) ·
+[Open saved Studio](https://jasonlingg.github.io/Research-Second-Brain/case-study/) ·
 [Findings](docs/QASPER_AGENT_STUDY.md) ·
 [Technical walkthrough](docs/TECHNICAL_CASE_STUDY.md)
 
@@ -82,4 +82,4 @@ tests/case_study/         Agent, training and evaluation tests
 Saved data and release evidence stay in place. The
 [repository map](docs/REPOSITORY_LAYOUT.md) explains shared code and historical paths;
 [the project guide](PROJECT_GUIDE.md) has full-suite setup. Historical prototypes
-remain at [`archive-full`](https://github.com/Jasonlingg/Envoy/tree/archive-full).
+remain at [`archive-full`](https://github.com/Jasonlingg/Research-Second-Brain/tree/archive-full).

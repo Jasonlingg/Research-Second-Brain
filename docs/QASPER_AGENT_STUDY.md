@@ -222,7 +222,7 @@ python -m benchmarks.envoybench.qasper_official score \
 The first command recomputes mechanical counts and aggregates existing support
 judgments; the second runs original-reference Answer F1. Neither makes new
 semantic judgments. The
-[public Studio](https://jasonlingg.github.io/Envoy/case-study/) exposes the actual
+[public Studio](https://jasonlingg.github.io/Research-Second-Brain/case-study/) exposes the actual
 answers and actions, and the [training evidence](../release/qwen-v5-training/README.md)
 pins the observed recipe while disclosing the missing historical script version.
 

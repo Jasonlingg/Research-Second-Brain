@@ -1,4 +1,4 @@
-# Envoy research MCP
+# Research Second Brain
 
 A personal second brain for ML experiments: keep paper evidence, results and
 the decisions between them accessible to your assistant across sessions.

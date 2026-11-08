@@ -7,17 +7,21 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def study_html() -> str:
-    """Use the current viewer with the original saved data, byte-for-byte."""
+def study_data() -> str:
+    """Extract the frozen JSON text without changing its saved bytes."""
     original = (ROOT / "release/qasper-agent-study/studio.html").read_text()
-    start = original.index('<script id="envoybench-data" type="application/json">')
-    end = original.index("</script>", start) + len("</script>")
-    embedded = original[start:end]
+    marker = '<script id="envoybench-data" type="application/json">'
+    return original.split(marker, 1)[1].split("</script>", 1)[0]
+
+
+def study_html() -> str:
+    """Use the current viewer with an external, read-only snapshot."""
     template = (ROOT / "benchmarks/envoybench/demo.html").read_text()
-    marker = "  <script>"
+    marker = "</head>"
     if template.count(marker) != 1:
-        raise ValueError("Studio template must have one script insertion point")
-    return template.replace(marker, embedded + "\n" + marker, 1)
+        raise ValueError("Studio template must have one head element")
+    return template.replace(marker,
+        '<meta name="envoybench-snapshot" content="data.json">\n' + marker, 1)
 
 
 def build(output: Path) -> None:
@@ -32,6 +36,7 @@ def build(output: Path) -> None:
     study = output / "case-study"
     study.mkdir()
     (study / "index.html").write_text(study_html())
+    (study / "data.json").write_text(study_data())
     shutil.copyfile(ROOT / "release/qasper-agent-study/rl.html", study / "rl.html")
     # Keep the previous RL and recorded-demo URLs usable.
     shutil.copyfile(study / "rl.html", output / "rl.html")

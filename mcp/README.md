@@ -100,4 +100,5 @@ python -m http.server 8927 --bind 127.0.0.1 --directory out/envoy-site
 
 Open `http://127.0.0.1:8927`. The output directory must be new or empty; use
 `--output` with another directory for a fresh build. The builder copies only
-explicit public demo inputs and retains the original embedded study data in the updated viewer.
+explicit public demo inputs. The viewer fetches a separate `case-study/data.json`
+extracted unchanged from the frozen report; the historical HTML stays intact.

@@ -313,7 +313,7 @@
     (() => {
       "use strict";
       const byId = (id) => document.getElementById(id);
-      const state = { data: null, caseIndex: -1, selectedRun: null, caseFilter: "all", caseQuery: "", traceCache: new Map(), traceAllowed: false, replay: { active: false, step: 0, timer: null }, review: null, reviewIndex: 0, reviewBusy: false, reviewDirty: false, sourceCache: new Map(), blindReview: null, blindIndex: 0, blindBusy: false, blindDirty: false, blindSourceCache: new Map(), blindActive: false, snapshot: Boolean(document.getElementById("envoybench-data")) };
+      const state = { data: null, caseIndex: -1, selectedRun: null, caseFilter: "all", caseQuery: "", traceCache: new Map(), traceAllowed: false, replay: { active: false, step: 0, timer: null }, review: null, reviewIndex: 0, reviewBusy: false, reviewDirty: false, sourceCache: new Map(), blindReview: null, blindIndex: 0, blindBusy: false, blindDirty: false, blindSourceCache: new Map(), blindActive: false, snapshot: Boolean(document.getElementById("envoybench-data") || document.querySelector('meta[name="envoybench-snapshot"]')) };
 
       function node(tag, className, value) {
         const element = document.createElement(tag);
@@ -1561,7 +1561,13 @@
         const error = byId("load-error"); error.hidden = true; clear(error);
         try {
           let data;
-          if (state.snapshot) data = JSON.parse(byId("envoybench-data").textContent);
+          if (byId("envoybench-data")) data = JSON.parse(byId("envoybench-data").textContent);
+          else if (state.snapshot) {
+            const response = await fetch(document.querySelector('meta[name="envoybench-snapshot"]').content,
+              { headers: { Accept: "application/json" } });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            data = await response.json();
+          }
           else {
             const response = await fetch("/api/demo", { headers: { Accept: "application/json" } });
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -1573,7 +1579,7 @@
         } catch (failure) {
           error.hidden = false;
           add(error, "strong", "", "The demo data could not be loaded.");
-          add(error, "div", "", state.snapshot ? `The embedded snapshot could not be read (${failure.message}).` : `Check the local demo server and try again (${failure.message}).`);
+          add(error, "div", "", state.snapshot ? `The saved snapshot could not be loaded (${failure.message}).` : `Check the local demo server and try again (${failure.message}).`);
           const retry = add(error, "button", "", "Retry"); retry.type = "button"; retry.addEventListener("click", load);
         }
       }

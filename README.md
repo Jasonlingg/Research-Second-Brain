@@ -38,6 +38,53 @@ The second command starts a stdio server, normally launched by your MCP client.
 Core tools need no GPU, training packages or model API key. See
 [setup and limitations](mcp/README.md).
 
+## Memory architecture
+
+The design draws on [Anthropic's components of agent memory](https://www.anthropic.com/research/components-of-agent-memory):
+keep original evidence, durable notes and navigation separate, and check notes
+against their sources when reviewing past work.
+
+```text
+              Your assistant
+              (Codex / Claude)
+                     |
+                    MCP
+                     |
+          Research Second Brain
+                     |
+       +-------------+-------------+
+       |             |             |
+     Capture       Recall        Review
+       |             |             |
+  Import notes   Word-overlap   Check sources
+  Read papers    search + atlas Separate facts,
+  Save results                  guesses, conflicts
+       |             |             |
+       +-------------+-------------+
+                     |
+           Local research store
+          Versioned records linked
+           to original evidence
+                     |
+              Obsidian export
+           Linked notes you browse
+```
+
+The assistant does the reasoning; the MCP provides storage, retrieval and source
+access. Review produces a draft; saving it is explicit.
+
+| Layer | Implementation |
+| --- | --- |
+| Evidence | Saved experiment artifacts, cached paper passages and explicitly imported notes, with source hashes and receipts. |
+| Records | Versioned experiment briefs, results, research notes and decisions; updates check the current revision. |
+| Recall | Word-overlap search over local records and a curated experiment atlas; the host assistant follows source links. |
+| Review | The `review_research_memory` MCP prompt guides the host assistant to separate observations, hypotheses and conflicts in a draft. Saving is explicit. |
+| Obsidian | A generated reading view refreshed after successful MCP saves. Personal notes enter recall through explicit import. |
+
+This is an explicit review workflow, without automatic background consolidation
+or a learned memory ranker. The memory prompt does not run a model by itself.
+See [the workflow and evaluation limits](docs/MEMORY_WORKFLOW.md).
+
 ## Qwen case study
 
 [Open saved Studio](https://jasonlingg.github.io/Research-Second-Brain/case-study/) ·

@@ -30,7 +30,7 @@ the distinction and links the exact scoring artifacts.
 The public deliverable is an inspectable experiment: training data and recipe,
 pinned checkpoint identities, a frozen evaluation protocol, complete saved
 trajectories, and a runnable Studio. Start with the
-[public saved-run demo](https://jasonlingg.github.io/Qwen-Envoy/), or use the
+[public saved-run demo](https://jasonlingg.github.io/Qwen-Envoy/case-study/), or use the
 commands below. The [comparison report](../benchmarks/envoybench/COMPARISON_2026_09_30.md)
 contains the detailed analysis behind this account.
 

@@ -22,6 +22,9 @@ Qwen case study → Training / evaluation → Saved results + Agent Studio
 
 ## Research MCP
 
+[Recorded product walkthrough](https://jasonlingg.github.io/Qwen-Envoy/) ·
+[Local preview](mcp/README.md#preview-the-public-walkthrough)
+
 Ask: “What have we already tried to reduce Qwen's false refusals, and what
 evidence informed our last decision?” The assistant finds prior attempts,
 inspects sources, and saves findings or decisions for later sessions.
@@ -37,7 +40,7 @@ Core tools need no GPU, training packages or model API key. See
 
 ## Qwen case study
 
-[Open saved Studio](https://jasonlingg.github.io/Qwen-Envoy/) ·
+[Open saved Studio](https://jasonlingg.github.io/Qwen-Envoy/case-study/) ·
 [Findings](docs/QASPER_AGENT_STUDY.md) ·
 [Technical walkthrough](docs/TECHNICAL_CASE_STUDY.md)
 

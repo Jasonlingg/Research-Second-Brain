@@ -1,13 +1,15 @@
-name: Publish saved Studio
+name: Publish Envoy demo and case study
 
 on:
   push:
     branches: [main]
     paths:
+      - 'web/**'
       - 'release/envoybench-v0.1/**'
       - 'release/qasper-agent-study/**'
       - 'release/hackathon-research-mcp/**'
       - 'scripts/case_study/reproduce_case_study.py'
+      - 'scripts/mcp/build_demo.py'
       - '.github/workflows/studio-pages.yml'
   workflow_dispatch:
 
@@ -33,13 +35,9 @@ jobs:
         working-directory: release/qasper-agent-study
         run: sha256sum --check SHA256SUMS
       - uses: actions/configure-pages@v5
-      - name: Stage only the read-only viewer
+      - name: Build the read-only product walkthrough and saved case study
         run: |
-          mkdir -p _site
-          cp release/qasper-agent-study/studio.html _site/index.html
-          cp release/qasper-agent-study/rl.html _site/rl.html
-          mkdir -p _site/research-mcp
-          cp release/hackathon-research-mcp/index.html release/hackathon-research-mcp/demo.json _site/research-mcp/
+          python -I -S scripts/mcp/build_demo.py --output _site
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v4
         with:
@@ -55,6 +53,6 @@ jobs:
       pages: write
       id-token: write
     steps:
-      - name: Deploy saved-run viewer
+      - name: Deploy public walkthrough
         id: deployment
         uses: actions/deploy-pages@v4

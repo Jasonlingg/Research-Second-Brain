@@ -87,3 +87,17 @@ python scripts/mcp/import_memory.py preview \
 Apply the same selection with its preview hash, or enable the equivalent MCP
 tools using `--import-root`. Imports become unreviewed, source-linked drafts,
 not verified measurements. See [import instructions and limits](../docs/MEMORY_IMPORT.md).
+
+## Preview the public walkthrough
+
+The public site is a recorded example, not a web client for private MCP records.
+Build it locally without dependencies or model calls:
+
+```bash
+python -I -S scripts/mcp/build_demo.py
+python -m http.server 8927 --bind 127.0.0.1 --directory out/envoy-site
+```
+
+Open `http://127.0.0.1:8927`. The output directory must be new or empty; use
+`--output` with another directory for a fresh build. The builder copies only
+explicit public demo inputs and preserves the saved study HTML unchanged.

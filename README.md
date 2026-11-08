@@ -44,6 +44,12 @@ Core tools need no GPU, training packages or model API key. See
 [Findings](docs/QASPER_AGENT_STUDY.md) ·
 [Technical walkthrough](docs/TECHNICAL_CASE_STUDY.md)
 
+The Qwen experiments explore whether small language model agents can handle
+paper reading and evidence gathering for Research Second Brain. We test tool
+use, fine-tuning and an exploratory RL loop to learn which tasks could be
+delegated to smaller models. Qwen workers remain optional; these experiments
+have not established an improvement to the product's research workflow.
+
 On 40 selected QASPER development questions, episodes without recorded execution
 errors increased from **18/40 to 39/40** after SFT. Provisional, model-assisted
 supported-answer passes on the 20 answerable questions remained **3/20 in both

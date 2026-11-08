@@ -100,4 +100,4 @@ python -m http.server 8927 --bind 127.0.0.1 --directory out/envoy-site
 
 Open `http://127.0.0.1:8927`. The output directory must be new or empty; use
 `--output` with another directory for a fresh build. The builder copies only
-explicit public demo inputs and preserves the saved study HTML unchanged.
+explicit public demo inputs and retains the original embedded study data in the updated viewer.

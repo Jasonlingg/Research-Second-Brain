@@ -51,7 +51,19 @@ claim. Model-powered Qwen investigation is a separate optional configuration.
 The `review_research_memory` MCP prompt guides the host assistant through a
 source-checking pass. It returns instructions, not an automatically executed
 review. The resulting draft separates observations, hypotheses, conflicts and
-next checks; nothing is saved automatically. See [the workflow](../docs/MEMORY_WORKFLOW.md).
+next checks; nothing is saved automatically. Select the prompt in your MCP client
+and supply a research question. The host assistant retrieves records and checks
+their sources; the server does not run an automatic background review.
+
+Review instructions request at most five records, ten source chunks and 600
+output words. These are host instructions, not enforced request or token limits.
+Save a proposed experiment with `save_experiment_brief` as `agent_authored`,
+retaining source references, a hypothesis, budget and decision criteria. A draft
+may have missing fields. Freezing a complete plan does not authorize execution;
+budget fields declare limits rather than enforcing spending. After a real run,
+use `record_experiment_result` against the frozen plan. Never record an expected
+outcome as a measurement. Recall and review quality have not been established
+through independent human evaluation.
 
 ## Obsidian
 

@@ -83,7 +83,7 @@ access. Review produces a draft; saving it is explicit.
 
 This is an explicit review workflow, without automatic background consolidation
 or a learned memory ranker. The memory prompt does not run a model by itself.
-See [the workflow and evaluation limits](docs/MEMORY_WORKFLOW.md).
+See [usage and limits](mcp/README.md).
 
 ## Qwen case study
 

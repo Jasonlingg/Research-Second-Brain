@@ -8,6 +8,17 @@ The QASPER study uses selected questions from Dasigi et al.'s dataset; it is not
 
 ## Engineering boundaries
 
+- Keep personal research journals, planning notes, session summaries and exploratory
+  audits in the user's personal Obsidian vault, outside the repository. Do not
+  commit them unless the user explicitly asks to publish those specific notes.
+- Public documentation should explain installation, supported behavior,
+  architecture or reproducibility. Keep operating instructions concise and move
+  internal experiment deliberation to Obsidian. Preserve the minimal evidence
+  required for published claims; large optional bundles need a pinned external
+  download before they can be removed.
+- Before staging, inspect the exact diff and file list. Stage only task-specific
+  paths; never use a broad add command to sweep unrelated notes into a commit.
+
 - Keep the agent multi-step and tool-mediated. Model-authored Python must run inside Docker, not on the host.
 - Preserve the recorded v1 execution and evaluation interfaces when inspecting old runs. New execution settings should be opt-in.
 - Treat [`src/env/reward.py`](src/env/reward.py) as the active historical MuSiQue reward, not a reward for research synthesis.

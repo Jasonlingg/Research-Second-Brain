@@ -9,3 +9,9 @@ dist/
 .ruff_cache/
 *.pyc
 .pytest_cache/
+
+# Private plans and exploratory audits belong in Obsidian, not public releases.
+docs/superpowers/
+docs/implementation/
+docs/MEMORY_RANKER_DATA_AUDIT.md
+.local-notes/

@@ -22,6 +22,40 @@ These are host instructions, not enforced request or token limits. The prompt
 itself makes no model or network calls and performs no writes. The host uses
 its own model; this feature does not require Qwen, PyTorch or a GPU.
 
+## From recall to the next experiment
+
+For example, ask: “Should the next Qwen experiment change training data or
+LoRA rank?” Use this sequence in your MCP client:
+
+1. Call `find_prior_experiments`, then open selected records with
+   `get_prior_experiment` and inspect their listed sources with
+   `read_prior_experiment_source`.
+2. For your own Markdown or JSON notes, enable `--import-root`, inspect
+   `preview_memory_import`, then apply that exact preview. Imported notes are
+   unreviewed drafts. Search them with `find_related_experiments` and inspect
+   selected records with `get_experiment`.
+3. Ask the host assistant for a proposal with a hypothesis, expected signal,
+   source references, resource budget, decision rule and unresolved questions.
+   Save it with `save_experiment_brief` as `agent_authored`. Missing plan fields
+   remain visible; a useful draft need not be ready to freeze.
+4. Review the proposal before freezing a complete plan. Freezing does not
+   authorize execution or spending. Budget fields record limits; they do not
+   enforce a runner's spending.
+5. After an actual run, record supplied measurements with
+   `record_experiment_result` against the frozen plan. Resume the experiment
+   and record the next decision. Never substitute an expected result for a run.
+
+In the saved Qwen evidence, rank was not independently varied. The stopping
+pattern motivates auditing demonstrations before paying for a higher-rank run;
+it does not establish that data changes will improve answers. The inspected
+40-question development set cannot become a new holdout.
+
+An implementing-assistant walkthrough exercised the real stdio MCP: imported
+the QASPER findings and restarted RL report, retrieved them, opened linked
+sources, saved a source-linked proposal and refreshed an isolated Obsidian
+vault. It made no paid calls and launched no training. This checks the workflow,
+not recommendation quality or an advantage over ordinary notes.
+
 ## What is authoritative
 
 | Layer | Envoy implementation | How to use it |

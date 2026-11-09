@@ -29,6 +29,25 @@ QASPER corpus downloads and Studio are not required to start this server.
 - Link questions, findings, measurements and decisions, preserving revisions.
 - Refresh linked Obsidian notes after successful MCP saves.
 
+### arXiv tools included
+
+The same server includes paper search and reading; no separate arXiv MCP
+installation is needed. Ask your assistant to search papers, open a result,
+find relevant passages and save a source-linked research note.
+
+| Tool | Purpose |
+| --- | --- |
+| `search_papers` | Discover papers by query, with optional date filters. |
+| `get_citations` | Find references or citing papers when available. |
+| `open_paper` | Fetch and cache version-pinned paper text. |
+| `find_evidence` | Search passages in papers already opened. |
+| `get_passage` | Read surrounding text with exact offsets. |
+
+Discovery and uncached downloads need internet access. These tools need no
+GPU, model API key or Docker. The host assistant interprets passages and
+explicitly saves notes; finding a quotation does not prove that it supports a
+claim. Model-powered Qwen investigation is a separate optional configuration.
+
 The `review_research_memory` MCP prompt guides the host assistant through a
 source-checking pass. It returns instructions, not an automatically executed
 review. The resulting draft separates observations, hypotheses, conflicts and

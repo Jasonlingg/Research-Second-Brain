@@ -37,6 +37,10 @@ h3 { font-size: 16px; line-height: 1.5; font-weight: 600; margin-bottom: 16px; }
 .action:active { background: #132d50; }
 .quiet, .demo-disclosure { color: var(--muted); font-size: 14px; }
 .quiet { margin: 16px 0 0; }
+.features { padding: 28px 0; border-top: 1px solid var(--line); }
+.features ul { margin: 0; padding-left: 22px; max-width: 78ch; }
+.features li { margin-bottom: 12px; }
+.features .quiet { max-width: 78ch; }
 .walkthrough { padding-top: 28px; border-top: 1px solid var(--line); }
 .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
 .status { flex-shrink: 0; font-size: 14px; color: var(--muted); }

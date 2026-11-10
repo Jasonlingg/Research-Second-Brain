@@ -65,6 +65,21 @@ use `record_experiment_result` against the frozen plan. Never record an expected
 outcome as a measurement. Recall and review quality have not been established
 through independent human evaluation.
 
+## Research memory skill
+
+The repo includes [`research-memory`](../.agents/skills/research-memory/SKILL.md)
+for the host assistant: capture a paper, post or supplied screenshot as an
+unreviewed source-linked note, then retrieve it for a later experiment.
+In a client that discovers `.agents/skills`, invoke `$research-memory`.
+Other clients can load the instructions manually or install them using their
+own skill mechanism. Installing the Python package or connecting MCP alone does
+not install a client skill. The MCP supplies storage and tools; the skill guides
+how the assistant uses them. General websites use the host's browsing tools.
+
+Example: “Use research-memory to save this post about encoder runtimes, including
+what applies to our paper extractor and what still needs checking.” Later ask:
+“What did we save about encoder runtimes?” Private notes stay outside Git.
+
 ## Obsidian
 
 ```bash

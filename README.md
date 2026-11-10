@@ -29,6 +29,20 @@ Ask: “What have we already tried to reduce Qwen's false refusals, and what
 evidence informed our last decision?” The assistant finds prior attempts,
 inspects sources, and saves findings or decisions for later sessions.
 
+Another use case: you read an interesting LinkedIn post, article or paper and
+want to remember it for a future experiment. Share the link and relevant text
+or screenshot with your assistant, then ask:
+
+> Save this as a research note: what it proposes, why it might matter for our
+> paper extractor, the source link and what we still need to verify.
+
+Later, ask: “What did we save about encoder inference runtimes?” The assistant
+can retrieve the note and revisit its sources before using it in a proposal.
+The host assistant reads general websites or screenshots; the MCP supplies
+arXiv tools and stores the resulting notes. Saving a claim does not verify it,
+and inaccessible links need supplied text. Personal notes stay in your local
+store and Obsidian, outside Git.
+
 ```bash
 python -m pip install -e '.[mcp,vault]'
 python scripts/mcp/research_justification_mcp.py

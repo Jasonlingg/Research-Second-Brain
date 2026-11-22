@@ -29,7 +29,7 @@ def build(output: Path) -> None:
     if output.exists() and any(output.iterdir()):
         raise ValueError("Output must be a new or empty directory")
     output.mkdir(parents=True, exist_ok=True)
-    for name in ("index.html", "styles.css", "app.js"):
+    for name in ("index.html", "styles.css", "app.js", "research.json", "research.js"):
         shutil.copyfile(ROOT / "web" / name, output / name)
     demo = ROOT / "release/hackathon-research-mcp/demo.json"
     shutil.copyfile(demo, output / "demo.json")

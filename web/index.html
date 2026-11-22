@@ -7,12 +7,14 @@
   <title>Research Second Brain</title>
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
+  <script src="research.js" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
     <a class="wordmark" href="./" aria-label="Research Second Brain home">Research Second Brain</a>
     <nav aria-label="Main navigation">
+      <a href="#research">Research</a>
       <a href="#recorded-demo">Example</a>
       <a href="case-study/">Qwen case study</a>
       <a href="https://github.com/Jasonlingg/Research-Second-Brain">GitHub</a>
@@ -27,6 +29,29 @@
         with a linked reading view in Obsidian.</p>
       <a class="action" href="#setup">Setup</a>
       <p class="quiet">Core tools need no GPU or model API key. Paper searches use the public network.</p>
+    </section>
+
+    <section id="research" class="research" aria-labelledby="research-title">
+      <div class="section-heading">
+        <h2 id="research-title">Currently exploring</h2>
+        <span id="research-date" class="status"></span>
+      </div>
+      <p>Selected notes from my research memory, alongside experiments and what they actually showed</p>
+      <div class="research-controls">
+        <label for="research-query">Search notes and experiments
+          <input id="research-query" type="search" placeholder="Try PyTorch, agents or Qwen" disabled>
+        </label>
+        <label for="research-kind">Show
+          <select id="research-kind" disabled><option value="all">All entries</option><option>Exploring</option><option>Experiment</option></select>
+        </label>
+      </div>
+      <p id="research-count" class="quiet" role="status" aria-live="polite">Loading public research</p>
+      <div class="research-workspace">
+        <nav id="research-entries" aria-label="Research entries"></nav>
+        <article id="research-inspector" aria-label="Selected research entry" tabindex="-1"></article>
+      </div>
+      <p id="research-scope" class="quiet">Published summaries only — no live access to my private MCP store or Obsidian vault</p>
+      <noscript><p><a href="research.json">Read the public research snapshot</a></p></noscript>
     </section>
 
     <section class="features" aria-labelledby="features-title">

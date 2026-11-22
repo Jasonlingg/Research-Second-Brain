@@ -137,6 +137,32 @@ not verified measurements. See [import instructions and limits](../docs/MEMORY_I
 ## Preview the public walkthrough
 
 The public site is a recorded example, not a web client for private MCP records.
+Its research feed is a reviewed snapshot in `web/research.json`. Generate a
+private preview from explicitly selected MCP records (repeat `--experiment-id`
+or use `--atlas-id` for published experiment history):
+
+```bash
+python scripts/mcp/publish_research.py --store-root /path/to/mcp/records preview \
+  --experiment-id experiment_ID --output out/public-review/preview.json
+python scripts/mcp/publish_research.py review out/public-review/preview.json
+```
+
+Inspect and edit the `public` section, including dates, source links and any
+private text. Keep `sources` unchanged. Run `review` again after edits; its hash
+binds the exact preview being published. Then explicitly publish:
+
+```bash
+python scripts/mcp/publish_research.py --store-root /path/to/mcp/records publish \
+  out/public-review/preview.json --review-sha256 REVIEW_HASH
+```
+
+Repeat `--store-root` when selected records live in multiple stores. The publisher
+checks the selected sources have not changed and writes only the public section;
+the review hash proves exact selection, not privacy or factual correctness.
+It replaces the feed with the selected entries, not an automatic merge. The
+static builder reads that feed, never the private store or vault. New MCP saves
+do not automatically publish; removing an entry requires rebuilding/redeploying.
+Previously published content can remain in Git history and browser caches.
 Build it locally without dependencies or model calls:
 
 ```bash

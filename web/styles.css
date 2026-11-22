@@ -89,3 +89,36 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding-top: 
   .record blockquote { padding: 16px; }
   footer { flex-direction: column; gap: 8px; }
 }
+
+.research { padding: 28px 0 32px; border-top: 1px solid var(--line); }
+.research-controls { display: flex; gap: 16px; margin-top: 24px; }
+.research-controls label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.research-controls label:first-child { flex: 1; }
+.research-controls input, .research-controls select, .research-retry { font: inherit; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 3px; padding: 10px 12px; min-height: 44px; min-width: 0; }
+.research-entry { padding: 24px 0; border-bottom: 1px solid var(--line); }
+.research-meta { display: flex; gap: 16px; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+.research-entry h3 { font-size: 19px; margin-bottom: 8px; }
+.research-entry p { max-width: 75ch; }
+.research-entry h4 { font-size: 14px; margin: 20px 0 8px; }
+.research-status { color: var(--accent); font-size: 13px; margin-bottom: 0; }
+.research-entry details { max-width: 78ch; }
+@media (max-width: 600px) { .research-controls { flex-direction: column; } }
+
+.research-workspace { display: grid; grid-template-columns: 260px minmax(0, 1fr); margin-top: 16px; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+#research-entries { display: block; background: var(--surface); padding: 8px; border-right: 1px solid var(--line); }
+button.research-entry { display: block; width: 100%; text-align: left; background: transparent; border: 1px solid transparent; border-radius: 3px; padding: 14px 12px; color: var(--ink); font: inherit; cursor: pointer; }
+button.research-entry:hover { background: var(--canvas); }
+button.research-entry[aria-pressed="true"] { background: var(--canvas); border-color: var(--line); }
+button.research-entry strong { display: block; font-size: 14px; line-height: 1.5; margin-bottom: 8px; }
+button.research-entry .research-meta { display: block; font-size: 12px; }
+button.research-entry .research-status { display: block; font-size: 12px; }
+#research-inspector { padding: 24px; min-height: 450px; min-width: 0; overflow-wrap: anywhere; }
+#research-inspector h3 { font-size: 21px; }
+#research-inspector h4 { font-size: 14px; margin: 24px 0 12px; }
+.research-stages { display: flex; gap: 8px; margin: 24px 0; flex-wrap: wrap; }
+.research-stages button { font: inherit; font-size: 13px; padding: 8px 12px; background: var(--surface); color: var(--muted); border: 1px solid var(--line); border-radius: 3px; cursor: pointer; }
+.research-stages button[aria-pressed="true"] { color: var(--accent); background: #edf3fb; border-color: var(--accent); }
+.research-content { min-height: 160px; }
+.research-backlink { display: block; text-align: left; font: inherit; font-size: 14px; color: var(--accent); background: none; border: 0; padding: 8px 0; cursor: pointer; }
+.research-backlink:hover { text-decoration: underline; }
+@media(max-width:700px) { .research-workspace { grid-template-columns: 1fr; } #research-entries { border-right: 0; border-bottom: 1px solid var(--line); max-height: 270px; overflow-y: auto; } #research-inspector { min-height: 0; padding: 20px; } }

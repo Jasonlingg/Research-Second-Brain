@@ -1,10 +1,77 @@
 """Build the public static walkthrough; never read personal Envoy stores."""
 
 import argparse
+import json
+import re
+from html import escape
+from string import Template
+from urllib.parse import urlparse
 import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def note_markdown(text):
+    """Render the note format: paragraphs, headings, bullets, bold and inline code.
+
+    Escape all source HTML. Keeping this small subset preserves the dependency-free
+    public build; source links are rendered separately from checked URL fields.
+    """
+    def inline(value):
+        value = escape(value)
+        value = re.sub(r'\*\*([^*\n]+)\*\*', r'<strong>\1</strong>', value)
+        return re.sub(r'`([^`\n]+)`', r'<code>\1</code>', value)
+
+    blocks, paragraph, bullets = [], [], []
+    code = None
+
+    def flush():
+        if paragraph:
+            blocks.append('<p>' + inline(' '.join(paragraph)) + '</p>')
+            paragraph.clear()
+        if bullets:
+            blocks.append('<ul>' + ''.join('<li>' + inline(b) + '</li>' for b in bullets) + '</ul>')
+            bullets.clear()
+
+    for line in text.splitlines():
+        if line.startswith('```'):
+            flush()
+            if code is None:
+                code = []
+            else:
+                blocks.append('<pre class="ascii-diagram"><code>' + escape('\n'.join(code)) + '</code></pre>')
+                code = None
+            continue
+        if code is not None:
+            code.append(line)
+            continue
+        heading = re.fullmatch(r'(#{1,4})\s+(.+)', line)
+        if heading:
+            flush()
+            level = max(2, len(heading[1]))
+            blocks.append(f'<h{level}>' + inline(heading[2]) + f'</h{level}>')
+        elif line.startswith('- '):
+            if paragraph:
+                flush()
+            bullets.append(line[2:])
+        elif not line.strip():
+            flush()
+        else:
+            if bullets:
+                flush()
+            paragraph.append(line.strip())
+    if code is not None:
+        blocks.append('<pre class="ascii-diagram"><code>' + escape('\n'.join(code)) + '</code></pre>')
+    flush()
+    html = '\n'.join(blocks)
+    sections = re.split(r'(?=<h2>)', html)
+    for index, section in enumerate(sections):
+        parts = re.split(r'(?=<h3>)', section)
+        if len(parts) >= 3 and all('class="ascii-diagram"' in part for part in parts[1:]):
+            slides = ''.join('<section class="gallery-slide">' + part + '</section>' for part in parts[1:])
+            sections[index] = parts[0] + '<div class="note-gallery"><div class="gallery-track" tabindex="0" aria-label="Pattern gallery; use left and right arrow keys">' + slides + '</div></div>'
+    return ''.join(sections)
 
 
 def study_data() -> str:
@@ -24,13 +91,54 @@ def study_html() -> str:
         '<meta name="envoybench-snapshot" content="data.json">\n' + marker, 1)
 
 
-def build(output: Path) -> None:
+def note_pages(snapshot=None) -> dict[str, str]:
+    """Render every selected public record using one shared template."""
+    if snapshot is None:
+        snapshot = json.loads((ROOT / "web/research.json").read_text())
+    template = Template((ROOT / "web/note.html").read_text())
+    pages = {}
+    for entry in snapshot["entries"]:
+        identity = entry["id"]
+        if not isinstance(identity, str) or not re.fullmatch(r"[a-zA-Z0-9_-]{1,100}", identity):
+            raise ValueError("Unsafe public note ID")
+        if identity in pages:
+            raise ValueError("Duplicate public note ID")
+        fields = {key: escape(entry[key], quote=True) for key in
+                  ("title", "summary", "status", "source_label")}
+        fields["date"] = escape(entry["date"] or "Date not recorded")
+        fields["kind"] = "Experiment journal" if entry["kind"] == "Experiment" else "Reading notes"
+        for key in ("detail", "next_check"):
+            fields[key] = note_markdown(entry[key])
+        url = entry.get("source_url")
+        if url == "case-study/":
+            url = "../../case-study/"
+        elif url:
+            parsed = urlparse(url)
+            if parsed.scheme != "https" or not parsed.netloc:
+                raise ValueError("Public source URL must be HTTPS")
+        fields["source"] = ('<p><a href="' + escape(url, quote=True) + '">'
+                            + fields["source_label"] + '</a></p>') if url else (
+                                '<p>' + fields["source_label"] + '</p>')
+        fields["receipt"] = ('<details><summary>Memory record</summary><code>'
+                             + escape(entry["memory_id"]) + '</code></details>') if entry.get("memory_id") else ""
+        pages[identity] = template.substitute(fields)
+    return pages
+
+
+def build(output: Path, *, snapshot=None) -> None:
     output = output.resolve()
     if output.exists() and any(output.iterdir()):
         raise ValueError("Output must be a new or empty directory")
+    pages = note_pages(snapshot)
     output.mkdir(parents=True, exist_ok=True)
-    for name in ("index.html", "styles.css", "app.js", "research.json", "research.js"):
+    for name in ("index.html", "styles.css", "app.js", "research.json", "research.js", "gallery.js"):
         shutil.copyfile(ROOT / "web" / name, output / name)
+    if snapshot is not None:
+        (output / "research.json").write_text(json.dumps(snapshot, ensure_ascii=False))
+    for identity, html in pages.items():
+        directory = output / "notes" / identity
+        directory.mkdir(parents=True)
+        (directory / "index.html").write_text(html)
     demo = ROOT / "release/hackathon-research-mcp/demo.json"
     shutil.copyfile(demo, output / "demo.json")
     study = output / "case-study"

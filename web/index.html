@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
   <script src="research.js" defer></script>
+  <script src="gallery.js" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -16,27 +17,26 @@
     <nav aria-label="Main navigation">
       <a href="#research">Research</a>
       <a href="#recorded-demo">Example</a>
-      <a href="case-study/">Qwen case study</a>
+      <a href="case-study/">QASPER Agent Bench</a>
       <a href="https://github.com/Jasonlingg/Research-Second-Brain">GitHub</a>
     </nav>
   </header>
 
   <main id="main">
     <section class="intro" aria-labelledby="intro-title">
-      <h1 id="intro-title">An MCP server for ML research</h1>
-      <p class="lede">Search arXiv, read paper passages and recall your past experiments through one MCP server.
-        Research Second Brain keeps source-linked notes, results and decisions locally,
-        with a linked reading view in Obsidian.</p>
-      <a class="action" href="#setup">Setup</a>
-      <p class="quiet">Core tools need no GPU or model API key. Paper searches use the public network.</p>
+      <p class="author-line">Jason Ling · Research notebook</p>
+      <h1 id="intro-title">Papers, ideas and experiments</h1>
+      <p class="lede">Things I’m reading about ML and agents, why they interest me,
+        and what happens when I try them</p>
+      <p class="quiet">Selected notes from my second brain · <a href="#setup">About the MCP behind it</a></p>
     </section>
 
     <section id="research" class="research" aria-labelledby="research-title">
       <div class="section-heading">
-        <h2 id="research-title">Currently exploring</h2>
+        <h2 id="research-title">Latest notes</h2>
         <span id="research-date" class="status"></span>
       </div>
-      <p>Selected notes from my research memory, alongside experiments and what they actually showed</p>
+      <p>A reading log and experiment journal, with sources and open questions</p>
       <div class="research-controls">
         <label for="research-query">Search notes and experiments
           <input id="research-query" type="search" placeholder="Try PyTorch, agents or Qwen" disabled>
@@ -46,10 +46,7 @@
         </label>
       </div>
       <p id="research-count" class="quiet" role="status" aria-live="polite">Loading public research</p>
-      <div class="research-workspace">
-        <nav id="research-entries" aria-label="Research entries"></nav>
-        <article id="research-inspector" aria-label="Selected research entry" tabindex="-1"></article>
-      </div>
+      <div id="research-entries" class="dispatches" aria-label="Research posts"></div>
       <p id="research-scope" class="quiet">Published summaries only — no live access to my private MCP store or Obsidian vault</p>
       <noscript><p><a href="research.json">Read the public research snapshot</a></p></noscript>
     </section>
@@ -61,7 +58,7 @@
         <li><strong>Research memory</strong> — Import selected Markdown or JSON notes and search saved experiments across sessions</li>
         <li><strong>Evidence-linked records</strong> — Save findings, results and decisions with source references and revision history</li>
         <li><strong>Memory review</strong> — Ask your assistant to check past records against their sources and draft a proposed update</li>
-        <li><strong>Obsidian export</strong> — Browse linked notes refreshed after successful MCP saves; personal notes require explicit import</li>
+        <li><strong>Obsidian notes</strong> — With a configured note folder, MCP writes Markdown directly and reads your edits; experiment records also have a generated reading view</li>
       </ul>
       <p class="quiet">All included in the same server. Paper search and uncached downloads need internet access.
         No separate arXiv MCP installation is needed. Review drafts are saved only when explicitly requested.</p>
@@ -126,7 +123,7 @@ python scripts/mcp/research_justification_mcp.py</code></pre>
     <section class="notes" aria-label="Scope and research background">
       <div><h3>Current limitations</h3>
         <p>Recall currently uses word overlap. Exact quotes and hashes establish provenance, not whether a conclusion is supported.
-          Personal Obsidian notes do not sync back into recall. A small pilot did not establish an advantage over web research plus Markdown.</p>
+          Only the configured Markdown note folder is read directly; other personal notes require explicit import. Public notes require approval. A small pilot did not establish an advantage over web research plus Markdown.</p>
       </div>
       <div><h3>Qwen training and evaluation</h3>
         <p>Inspect the saved SFT, exploratory RL and QASPER evaluation. Those experiments informed the project;

@@ -162,6 +162,10 @@ the review hash proves exact selection, not privacy or factual correctness.
 It replaces the feed with the selected entries, not an automatic merge. The
 static builder reads that feed, never the private store or vault. New MCP saves
 do not automatically publish; removing an entry requires rebuilding/redeploying.
+Every feed entry gets a separate `notes/<record-id>/` page during the build.
+All pages use `web/note.html`; titles, content, dates and source links come from
+the reviewed feed. Adding another selected note requires no new HTML file.
+The generated pages work without JavaScript and retain stable record-based URLs.
 Previously published content can remain in Git history and browser caches.
 Build it locally without dependencies or model calls:
 

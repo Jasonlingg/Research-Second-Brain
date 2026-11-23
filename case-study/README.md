@@ -1,4 +1,6 @@
-# Qwen training and evaluation case study
+# QASPER Agent Bench
+
+An independent evaluation harness for tool-using paper agents, built on QASPER.
 
 This path preserves the Qwen3-8B paper agent, its SFT data and recipe, the
 exploratory Prime-RL pilot, and saved QASPER evaluation. It is inspectable research

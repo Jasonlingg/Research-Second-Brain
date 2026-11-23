@@ -1,4 +1,4 @@
-"""Local QASPER Agent Studio: source review and inspectable saved traces.
+"""Local QASPER Agent Bench: source review and inspectable saved traces.
 
 By default this shows a *historical development* Qwen comparison, not an
 EnvoyBench test result. Pass --run-dir after a complete EnvoyBench evaluation to
@@ -62,7 +62,7 @@ def create_app(
         raise ValueError("named token diagnostics cannot share a blind human review session")
     if (supplementary_runs or qasper_scores) and blind_review_dir is not None:
         raise ValueError("named saved runs and scores cannot share a blind human review session")
-    app = FastAPI(title="QASPER Agent Studio")
+    app = FastAPI(title="QASPER Agent Bench")
     verified_trace_store: dict[tuple[str, ...], dict] = {}
     app.state.payload = build_demo_payload(
         run_dir=run_dir, review_dir=review_dir, dataset=dataset,
@@ -324,7 +324,7 @@ def main() -> int:
         supplementary_runs=args.supplementary_run,
         qasper_scores=args.qasper_score,
     )
-    print(f"QASPER Agent Studio: http://127.0.0.1:{args.port}", flush=True)
+    print(f"QASPER Agent Bench: http://127.0.0.1:{args.port}", flush=True)
     uvicorn.run(app, host="127.0.0.1", port=args.port)
     return 0
 

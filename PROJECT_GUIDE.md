@@ -1,6 +1,6 @@
 # Envoy project guide
 
-Choose [the research MCP](mcp/README.md) or [the Qwen case study](case-study/README.md).
+Choose [the research MCP](mcp/README.md) or [the QASPER Agent Bench](case-study/README.md).
 The [README](README.md) explains how they relate. Commands below run from the
 repository root. Code now lives in separate MCP, worker and experiment packages;
 saved data and release artifacts retain their original locations.

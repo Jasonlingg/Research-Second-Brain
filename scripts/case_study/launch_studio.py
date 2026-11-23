@@ -1,4 +1,4 @@
-"""Open the packaged QASPER Agent Studio runs; live inference is opt-in."""
+"""Open the packaged QASPER Agent Bench runs; live inference is opt-in."""
 
 from __future__ import annotations
 
@@ -66,7 +66,7 @@ def main() -> int:
         provisional=True,
         paper_models_path=models_path,
     )
-    print(f"QASPER Agent Studio: http://127.0.0.1:{args.port}", flush=True)
+    print(f"QASPER Agent Bench: http://127.0.0.1:{args.port}", flush=True)
     print("Opening runs makes no model calls. Live investigations require clicking Run.")
     uvicorn.run(app, host="127.0.0.1", port=args.port)
     return 0

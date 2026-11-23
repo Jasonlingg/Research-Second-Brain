@@ -1,4 +1,4 @@
-# QASPER Agent Studio — a Qwen Envoy case study
+# QASPER Agent Bench — a Qwen Envoy case study
 
 This study adapts QASPER's existing questions and paper annotations (Dasigi et
 al., 2021; CC BY 4.0) to executable Python investigation. It is an independent

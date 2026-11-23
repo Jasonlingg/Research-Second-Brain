@@ -1,6 +1,6 @@
-# QASPER Agent Studio — findings and limitations
+# QASPER Agent Bench — findings and limitations
 
-QASPER Agent Studio is a Qwen Envoy case study of paper-question answering
+QASPER Agent Bench is a Qwen Envoy case study of paper-question answering
 through executable Python tools. The questions, answers, and paper annotations
 come from **QASPER (Dasigi et al., 2021; CC BY 4.0)**. This independent project
 adapts them to known-paper investigation; it is not a new question benchmark or

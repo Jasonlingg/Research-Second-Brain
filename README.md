@@ -7,7 +7,7 @@ This repository has two paths. Choose the one you want to use or inspect:
 | | Start here | What it does |
 | --- | --- | --- |
 | **Research MCP** | [Use Research Second Brain](mcp/README.md) | Connect papers, experiment results and decisions across sessions; browse linked notes in Obsidian. |
-| **Qwen case study** | [Inspect the study](case-study/README.md) | Inspect Qwen3-8B SFT, the exploratory RL pilot, saved QASPER evaluation and Agent Studio. |
+| **QASPER Agent Bench** | [Inspect the study](case-study/README.md) | Inspect Qwen3-8B SFT, the exploratory RL pilot, saved QASPER evaluation and Agent Studio. |
 
 The MCP gives your assistant access to research records. The case study is one
 body of evidence it can consult; running the MCP does not train or evaluate Qwen.
@@ -17,7 +17,7 @@ Your assistant → Research MCP → Papers + experiment records → Obsidian
                                       ↑
                              Saved Qwen experiments
 
-Qwen case study → Training / evaluation → Saved results + Agent Studio
+QASPER Agent Bench → Training / evaluation → Saved results + Agent Studio
 ```
 
 ## Research MCP
@@ -99,7 +99,7 @@ This is an explicit review workflow, without automatic background consolidation
 or a learned memory ranker. The memory prompt does not run a model by itself.
 See [usage and limits](mcp/README.md).
 
-## Qwen case study
+## QASPER Agent Bench
 
 [Open saved Studio](https://jasonlingg.github.io/Research-Second-Brain/case-study/) ·
 [Findings](docs/QASPER_AGENT_STUDY.md) ·

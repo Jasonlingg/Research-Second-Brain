@@ -26,14 +26,54 @@ from src.mcp.ml_experiment_store import ExperimentStore  # noqa: E402
 from src.mcp.obsidian_refresh import ObsidianRefresh  # noqa: E402
 from src.mcp.paper_discovery import PaperDiscovery  # noqa: E402
 from src.mcp.research_justification import justification_packet  # noqa: E402
+from src.mcp.vault_notes import VaultNotes, Note  # noqa: E402
 
 
 def create_server(store, library, discovery, *, nemotron_key=None,
                   nemotron_transport=None, obsidian_vault=None, obsidian_stores=None,
-                  import_root=None):
+                  import_root=None, notes_vault=None):
     """Add one read-only view while retaining the pinned experiment-mode file."""
     server = experiment_server(store, library, discovery, nemotron_key=nemotron_key,
                                nemotron_transport=nemotron_transport)
+
+    if notes_vault is not None:
+        notes = VaultNotes(notes_vault)
+
+        @server.tool(annotations=LOCAL)
+        @_errors
+        def find_vault_notes(query: str = "") -> dict[str, Any]:
+            """Search current Markdown notes, including direct edits in the personal vault."""
+            result = notes.scan(query)
+            return {"matches": [{"id": r["id"], "sha256": r["sha256"],
+                                 "title": r["note"]["title"], "summary": r["note"]["summary"],
+                                 "shared_at": r["note"]["shared_at"]}
+                                for r in result["matches"][:20]],
+                    "truncated": len(result["matches"]) > 20,
+                    "errors": result["errors"][:20]}
+
+        @server.tool(annotations=LOCAL)
+        @_errors
+        def get_vault_note(note_id: str) -> dict[str, Any]:
+            """Read a private note and its content hash before editing or approving it."""
+            return notes.get(note_id)
+
+        @server.tool(annotations=SAVE)
+        @_errors
+        def save_vault_note(note: Note, note_id: str | None = None,
+                            expected_sha256: str | None = None) -> dict[str, Any]:
+            """Write authoritative Markdown; new notes are private. Editing needs the last read hash."""
+            return notes.save(note.model_dump(), note_id, expected_sha256)
+
+        @server.tool(annotations=SAVE)
+        @_errors
+        def approve_vault_note(note_id: str, expected_sha256: str,
+                               revoke: bool = False) -> dict[str, Any]:
+            """Approve exact inspected content for publication only when the user requests it.
+
+            No deployment. Later private edits do not alter this approved snapshot.
+            Revoke removes it from the next export, not previously deployed copies.
+            """
+            return notes.approve(note_id, expected_sha256, revoke)
 
     if import_root is not None:
         importer = MemoryImport(import_root)
@@ -85,9 +125,10 @@ Mark any interpretation as caller-authored and unreviewed. Do not promote a
 plausible explanation into a tested rule. Do not overwrite or save anything.
 If the user later requests persistence, use the existing revision-checked note,
 question-view or decision tools, preserving the old record and its provenance.
-Obsidian is a reading projection. Only explicitly imported personal notes are
-searchable; later edits are not automatically synced. Do not import more files
-while reviewing existing memory unless the user requests it.
+When vault-note tools are configured, also find_vault_notes and get_vault_note:
+those Markdown files are authoritative and reflect direct edits. Other personal
+notes still require explicit import. The generated experiment vault remains a
+reading projection. Do not approve or publish private notes during a review.
 
 Research question JSON:
 """ + json.dumps({"question": question}, ensure_ascii=False)
@@ -112,6 +153,8 @@ def main():
     parser.add_argument("--store-root", type=Path, default=Path("~/.envoy/ml-experiments"))
     parser.add_argument("--library-root", type=Path, default=Path("~/.envoy/arxiv-library"))
     parser.add_argument("--artifact-root", type=Path)
+    parser.add_argument("--notes-vault", type=Path,
+                        help="Personal folder for authoritative Markdown notes (not the generated reading vault)")
     parser.add_argument("--import-root", type=Path,
                         help="Opt in to importing explicitly selected .md/.json files in this root")
     parser.add_argument("--obsidian-vault", type=Path,
@@ -141,6 +184,7 @@ def main():
     create_server(store, library, discovery,
                   nemotron_key=nemotron_key,
                   import_root=args.import_root,
+                  notes_vault=args.notes_vault,
                   obsidian_vault=None if args.no_obsidian_refresh else args.obsidian_vault,
                   obsidian_stores=[store.files.root,
                                    Path("~/.envoy/research-second-brain/records"),

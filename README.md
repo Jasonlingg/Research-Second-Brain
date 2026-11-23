@@ -95,6 +95,12 @@ access. Review produces a draft; saving it is explicit.
 | Review | The `review_research_memory` MCP prompt guides the host assistant to separate observations, hypotheses and conflicts in a draft. Saving is explicit. |
 | Obsidian | A generated reading view refreshed after successful MCP saves. Personal notes enter recall through explicit import. |
 
+For research notes, `--notes-vault` instead uses Markdown in a selected personal
+vault folder as the source of truth. Direct edits appear in recall and the local
+preview; only explicitly approved snapshots are eligible for public export.
+Structured experiment records retain their JSON store and generated reading view.
+See [vault-backed notes](mcp/README.md#use-markdown-as-the-research-note-store).
+
 This is an explicit review workflow, without automatic background consolidation
 or a learned memory ranker. The memory prompt does not run a model by itself.
 See [usage and limits](mcp/README.md).

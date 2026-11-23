@@ -82,6 +82,51 @@ what applies to our paper extractor and what still needs checking.” Later ask:
 
 ## Obsidian
 
+### Use Markdown as the research-note store
+
+Configure the MCP with a dedicated folder inside your personal vault:
+
+```bash
+python scripts/mcp/research_justification_mcp.py \
+  --notes-vault '/path/to/personal-vault/Research Notes'
+```
+
+`save_vault_note` writes YAML frontmatter and a Markdown body directly there.
+`find_vault_notes` reads current files; `get_vault_note` returns the contents and
+hash needed for an edit. Edits made in Obsidian are visible without reimporting.
+Only this explicitly selected folder is scanned, not the rest of your vault.
+Missing dates stay unknown. Structured experiment records still use JSON.
+
+Run the private preview watcher in one terminal and the localhost server in another:
+
+```bash
+python scripts/mcp/vault_preview.py --notes-vault '/path/to/personal-vault/Research Notes' --watch
+python -m http.server 8935 --bind 127.0.0.1 --directory out/private-notes-preview
+```
+
+The watcher checks every three seconds, rebuilds after changes and reloads the
+preview's index. It runs on your computer, which must stay awake. Invalid notes
+leave the previous preview intact and report an error. The preview contains
+private content: never deploy it or serve it on a public interface.
+
+To publish, first read the exact note with `get_vault_note`. Only at the user's
+explicit request, call `approve_vault_note` with its current SHA-256. Approval
+captures that version; later edits remain private until approved again. Export:
+
+```bash
+python scripts/mcp/vault_preview.py --notes-vault '/path/to/personal-vault/Research Notes' \
+  --approved-output out/approved-research.json
+```
+
+Inspect this public-only file before replacing `web/research.json` and running
+the usual build/deployment. Export replaces the selection; it does not merge
+in existing JSON experiment entries. Approval and export do not deploy. Revoke
+with `approve_vault_note(..., revoke=true)`, then export and redeploy to remove a
+published note; old deployments, caches and Git history may retain old copies.
+Deleting a private file does not automatically retract an approved snapshot.
+
+### Existing experiment reading view
+
 ```bash
 python scripts/mcp/export_research_vault.py
 ```

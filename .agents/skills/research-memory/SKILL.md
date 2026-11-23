@@ -26,6 +26,31 @@ server or substitute a tracked repository file for private memory.
 
 Produce a concise note: title, capture dates, source URL and available identity, what the
 source claims, why it may matter, applicability limits, and one useful next check.
+Write a reading note, not a storage transcript: use a useful summary, short
+sections and bullets when they help. State review status once in metadata rather
+than prefixing every paragraph. Put migration IDs, capture basis and bookkeeping
+in YAML metadata (`origin_record_id`, `capture_basis` for vault notes), not the
+article body. Keep the substantive uncertainty and source limitations visible.
+Do not invent the user's personal motivation; label your applicability analysis.
+
+The Latest notes page is a swipeable gallery of separate notes; its cards take
+an ASCII preview from the first fenced `text` diagram in each note. Add a small
+accurate diagram when it helps explain a flow or architecture, preserving it in
+the Markdown so it appears on the full note page too. This does not mean every
+note body should become a carousel. Do not invent a diagram for purely prose ideas.
+
+When a note compares several architectures or patterns, offer a swipeable gallery
+if that helps the comparison or the user requests it. Use one `##` section with
+consecutive `###` pattern headings; each pattern needs a concise explanation and
+an illustrative ASCII diagram in a fenced `text` block. Two or more such patterns
+render as gallery slides through the shared template, not separate hard-coded
+pages. Keep labels/arrows accurate, preserve decision points and do not imply
+measured performance. Label diagrams as assistant-authored illustrations when
+reconstructed from a source. Ordinary reading notes remain articles; do not force
+a gallery or diagram when it adds no clarity. Keep the underlying Markdown
+readable in Obsidian; controls, swipe and keyboard support belong to the renderer.
+
+
 Label assistant-authored interpretations as unreviewed. Exact quotes and hashes
 establish provenance, not semantic support. A research note is not a measured
 experiment result or an approved plan.
@@ -61,6 +86,15 @@ that permission again. A request only to explain or assess calls for a draft.
 
 Choose the existing storage path that fits:
 
+- Prefer `save_vault_note` for general research notes when available. It writes
+  directly to the configured personal Markdown folder; no import is needed.
+  Search with `find_vault_notes`, inspect with `get_vault_note`, and use the
+  returned hash for edits. Preserve `shared_at` separately from source dates.
+  New notes are private. Only if the user explicitly asks to publish, inspect
+  the exact content and call `approve_vault_note` with that hash. Approval saves
+  a versioned public snapshot; it is not deployment. Later edits stay private.
+  The local watcher updates previews; public export/build/deploy is separate.
+
 - For a relevant experiment, call `resume_experiment` to get its current revision,
   then `record_experiment_research`. Supply an explicit note ID, question,
   source-referenced findings and uncertainties. Preserve `host_research`,
@@ -87,7 +121,8 @@ an approved experiment as part of capture.
 
 ## Recall
 
-Search `find_related_experiments` for saved notes and `find_prior_experiments`
+When available, search `find_vault_notes` and inspect with `get_vault_note` for
+authoritative Markdown notes. Search `find_related_experiments` for legacy saved notes and `find_prior_experiments`
 for curated historical runs. Inspect candidates with `get_experiment` or
 `get_prior_experiment` and open source passages before relying on a summary.
 Word overlap is navigation, not proof of relevance. If no useful match appears,

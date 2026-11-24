@@ -31,13 +31,14 @@ from src.mcp.vault_notes import VaultNotes, Note  # noqa: E402
 
 def create_server(store, library, discovery, *, nemotron_key=None,
                   nemotron_transport=None, obsidian_vault=None, obsidian_stores=None,
-                  import_root=None, notes_vault=None):
+                  import_root=None, notes_vault=None, auto_publisher=None):
     """Add one read-only view while retaining the pinned experiment-mode file."""
     server = experiment_server(store, library, discovery, nemotron_key=nemotron_key,
                                nemotron_transport=nemotron_transport)
 
     if notes_vault is not None:
         notes = VaultNotes(notes_vault)
+        approval_annotations = SAVE.model_copy(update={"open_world_hint": auto_publisher is not None})
 
         @server.tool(annotations=LOCAL)
         @_errors
@@ -64,16 +65,21 @@ def create_server(store, library, discovery, *, nemotron_key=None,
             """Write authoritative Markdown; new notes are private. Editing needs the last read hash."""
             return notes.save(note.model_dump(), note_id, expected_sha256)
 
-        @server.tool(annotations=SAVE)
+        @server.tool(annotations=approval_annotations)
         @_errors
         def approve_vault_note(note_id: str, expected_sha256: str,
                                revoke: bool = False) -> dict[str, Any]:
             """Approve exact inspected content for publication only when the user requests it.
 
-            No deployment. Later private edits do not alter this approved snapshot.
-            Revoke removes it from the next export, not previously deployed copies.
+            With operator-enabled auto-publishing this also pushes approved snapshots
+            and triggers the website pipeline. Otherwise it only saves approval.
+            Later private edits do not alter the approved snapshot.
             """
-            return notes.approve(note_id, expected_sha256, revoke)
+            result = notes.approve(note_id, expected_sha256, revoke)
+            if auto_publisher is not None:
+                result['deployment'] = auto_publisher.publish(notes)
+                result['warning'] = 'See deployment status; push success is not proof that GitHub Pages finished.'
+            return result
 
     if import_root is not None:
         importer = MemoryImport(import_root)
@@ -155,6 +161,10 @@ def main():
     parser.add_argument("--artifact-root", type=Path)
     parser.add_argument("--notes-vault", type=Path,
                         help="Personal folder for authoritative Markdown notes (not the generated reading vault)")
+    parser.add_argument("--auto-publish", action="store_true",
+                        help="Push approved note snapshots and trigger GitHub Pages after explicit approval/revocation")
+    parser.add_argument("--publish-repo", type=Path, default=ROOT,
+                        help="Repository whose origin/main hosts the public feed; working files are never staged")
     parser.add_argument("--import-root", type=Path,
                         help="Opt in to importing explicitly selected .md/.json files in this root")
     parser.add_argument("--obsidian-vault", type=Path,
@@ -169,6 +179,12 @@ def main():
     parser.add_argument("--nebius-env-file", type=Path,
                         help="Read only NEBIUS_API_KEY from this existing private .env file")
     args = parser.parse_args()
+    if args.auto_publish and args.notes_vault is None:
+        parser.error('--auto-publish requires --notes-vault')
+    publisher = None
+    if args.auto_publish:
+        from src.mcp.auto_publish import AutoPublisher
+        publisher = AutoPublisher(args.publish_repo)
     nemotron_key = None
     if args.enable_nemotron:
         from dotenv import dotenv_values
@@ -185,6 +201,7 @@ def main():
                   nemotron_key=nemotron_key,
                   import_root=args.import_root,
                   notes_vault=args.notes_vault,
+                  auto_publisher=publisher,
                   obsidian_vault=None if args.no_obsidian_refresh else args.obsidian_vault,
                   obsidian_stores=[store.files.root,
                                    Path("~/.envoy/research-second-brain/records"),

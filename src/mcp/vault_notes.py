@@ -188,7 +188,8 @@ class VaultNotes:
             if revoke:
                 state.pop(identity, None)
             else:
-                state[identity] = {'sha256': expected_sha256, 'entry': self.public(record)}
+                state[identity] = {'sha256': expected_sha256, 'entry': self.public(record),
+                                   'origin_record_id': record['note'].get('origin_record_id')}
             raw = json.dumps(state, ensure_ascii=False).encode()
             if len(raw) > 65536:
                 raise ValueError('Publication approvals exceed 64 KiB')

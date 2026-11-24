@@ -125,6 +125,33 @@ with `approve_vault_note(..., revoke=true)`, then export and redeploy to remove 
 published note; old deployments, caches and Git history may retain old copies.
 Deleting a private file does not automatically retract an approved snapshot.
 
+### Deploy automatically after publication approval
+
+For an operator who owns the GitHub repository, opt in at server startup:
+
+```bash
+python scripts/mcp/research_justification_mcp.py \
+  --notes-vault '/path/to/personal-vault/Research Notes' \
+  --auto-publish --publish-repo /path/to/Research-Second-Brain
+```
+
+Only `approve_vault_note` (including explicit revocation) runs this hook. Saving,
+reading and searching remain private. The hook clones `origin/main` into a
+temporary directory, commits only `web/research.json`, then pushes normally.
+It uses the operator's existing Git credentials; it never stages local work.
+Your local branch is not moved; pull the generated feed commit before a later
+manual push if necessary. A competing remote push fails safely without force.
+It retains existing experiment entries, updates approved vault-note snapshots,
+and removes revoked vault notes. A migrated note replaces its matching legacy
+entry when its `origin_record_id` identifies that entry.
+
+The operation has a 60-second Git budget and makes no paid model calls. Failures
+leave approval saved and return a deployment failure; repeat the same approval
+to retry. A successful push triggers GitHub Pages but does not confirm the site
+is live. Check the Actions run before claiming deployment success. This option
+grants any caller permitted to use the approval tool the ability to publish;
+keep this MCP connection private. Reconnect the client after enabling the flag.
+
 ### Existing experiment reading view
 
 ```bash

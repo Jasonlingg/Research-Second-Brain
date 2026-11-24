@@ -100,9 +100,19 @@ def test_mcp_saves_recalls_and_approves_markdown(tmp_path):
     library, _ = make_library(tmp_path / 'library', {})
     store = ExperimentStore(tmp_path / 'records')
     folder = tmp_path / 'notes'
+    class Publisher:
+        calls = 0
+
+        def publish(self, notes):
+            self.calls += 1
+            assert notes.snapshot(public=True)[0]['entries']
+            return {'status': 'pushed', 'commit': 'test-only'}
+
+    publisher = Publisher()
 
     async def run():
-        async with Client(create_server(store, library, FakeDiscovery(), notes_vault=folder)) as client:
+        async with Client(create_server(store, library, FakeDiscovery(), notes_vault=folder,
+                                       auto_publisher=publisher)) as client:
             saved = await client.call_tool('save_vault_note', {'note': note()})
             assert not saved.is_error
             record = saved.structured_content
@@ -112,7 +122,10 @@ def test_mcp_saves_recalls_and_approves_markdown(tmp_path):
             assert found.structured_content['matches'][0]['id'] == record['id']
             current = await client.call_tool('get_vault_note', {'note_id': record['id']})
             assert 'Direct Obsidian edit' in current.structured_content['note']['detail']
+            assert publisher.calls == 0
             approved = await client.call_tool('approve_vault_note', {'note_id': record['id'], 'expected_sha256': current.structured_content['sha256']})
             assert not approved.is_error
+            assert publisher.calls == 1
+            assert approved.structured_content['deployment']['status'] == 'pushed'
             assert VaultNotes(folder).snapshot(public=True)[0]['entries'][0]['id'] == record['id']
     asyncio.run(run())

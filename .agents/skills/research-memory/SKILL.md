@@ -93,7 +93,11 @@ Choose the existing storage path that fits:
   New notes are private. Only if the user explicitly asks to publish, inspect
   the exact content and call `approve_vault_note` with that hash. Approval saves
   a versioned public snapshot; it is not deployment. Later edits stay private.
-  The local watcher updates previews; public export/build/deploy is separate.
+  The local watcher updates previews. With operator-enabled `--auto-publish`,
+  approval/revocation also pushes the approved public feed and triggers Pages.
+  Inspect the returned deployment status: `pushed` is not confirmed live;
+  `failed` preserves approval but needs a retry. Without that flag, public
+  export/build/deploy remains separate. Ordinary saves never publish.
 
 - For a relevant experiment, call `resume_experiment` to get its current revision,
   then `record_experiment_research`. Supply an explicit note ID, question,

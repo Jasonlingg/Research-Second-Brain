@@ -32,7 +32,7 @@ def refresh(notes, output):
     if errors:
         raise ValueError('Fix invalid notes before refreshing: ' + json.dumps(errors))
     digest = hashlib.sha256(json.dumps(snapshot['entries'], sort_keys=True).encode())
-    for name in ('index.html', 'note.html', 'styles.css', 'research.js', 'gallery.js'):
+    for name in ('index.html', 'note.html', 'styles.css', 'research.js'):
         digest.update((ROOT / 'web' / name).read_bytes())
     digest.update((ROOT / 'scripts/mcp/build_demo.py').read_bytes())
     revision = digest.hexdigest()
@@ -93,7 +93,7 @@ def main():
             status = refresh(notes, args.output)
             if status != 'unchanged':
                 print(status + ': ' + str(args.output), flush=True)
-        except (ValueError, OSError) as exc:
+        except (ValueError, OSError, KeyError, TypeError) as exc:
             if not args.watch:
                 raise
             print('Preview unchanged: ' + str(exc), file=sys.stderr, flush=True)

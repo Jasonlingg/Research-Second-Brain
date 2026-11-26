@@ -80,6 +80,27 @@ Example: “Use research-memory to save this post about encoder runtimes, includ
 what applies to our paper extractor and what still needs checking.” Later ask:
 “What did we save about encoder runtimes?” Private notes stay outside Git.
 
+## Add a post without editing the frontend
+
+1. Ask your assistant to save a paper or idea with `research-memory`. It writes
+   a private Markdown note in your configured Obsidian folder.
+2. Review the note in Obsidian or the local preview. Add your own take if you
+   have one; it is optional.
+3. Explicitly approve that note for publication. With auto-publishing enabled
+   below, approval updates the public feed and triggers deployment.
+
+Every post uses the same layout. The feed creates cards from published note
+data, and the build generates a separate page using one shared template.
+There is no HTML file to write for each post. Saving or editing a private note
+does not publish it; edits to a published note need approval again.
+
+For layout changes, the shared pieces are `postCard()` and `postPreview()` in
+[`web/research.js`](../web/research.js), the article template
+[`web/note.html`](../web/note.html), and [`web/styles.css`](../web/styles.css).
+The Markdown renderer and page generator live in
+[`scripts/mcp/build_demo.py`](../scripts/mcp/build_demo.py). No frontend framework
+or JavaScript build tool is required.
+
 ## Obsidian
 
 ### Use Markdown as the research-note store
@@ -96,6 +117,13 @@ python scripts/mcp/research_justification_mcp.py \
 hash needed for an edit. Edits made in Obsidian are visible without reimporting.
 Only this explicitly selected folder is scanned, not the rest of your vault.
 Missing dates stay unknown. Structured experiment records still use JSON.
+
+For a blog-style post, source explanation stays in `summary`/`detail`. An optional
+`my_take` holds the user's actual view, with `my_take_basis: user_supplied`;
+leave it empty when the user has not formed an opinion. `related_notes` holds
+existing note IDs. The preview links selected notes; public export omits links
+to unapproved notes. The capture skill asks at most one useful opinion question
+and never requires an opinion before saving. No thinking-history workflow is required.
 
 Run the private preview watcher in one terminal and the localhost server in another:
 

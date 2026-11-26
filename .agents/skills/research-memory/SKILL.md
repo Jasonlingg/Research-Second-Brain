@@ -33,27 +33,46 @@ in YAML metadata (`origin_record_id`, `capture_basis` for vault notes), not the
 article body. Keep the substantive uncertainty and source limitations visible.
 Do not invent the user's personal motivation; label your applicability analysis.
 
-The Latest notes page is a swipeable gallery of separate notes; its cards take
-an ASCII preview from the first fenced `text` diagram in each note. Add a small
-accurate diagram when it helps explain a flow or architecture, preserving it in
-the Markdown so it appears on the full note page too. This does not mean every
-note body should become a carousel. Do not invent a diagram for purely prose ideas.
+The Latest notes page uses a grid of separate posts. Its cards take an ASCII
+preview from the first fenced `text` diagram in each note. Add a small accurate
+diagram when it helps explain a flow or architecture, preserving it in the
+Markdown so it appears on the full note page too. Do not invent diagrams for
+purely prose ideas.
 
-When a note compares several architectures or patterns, offer a swipeable gallery
-if that helps the comparison or the user requests it. Use one `##` section with
-consecutive `###` pattern headings; each pattern needs a concise explanation and
-an illustrative ASCII diagram in a fenced `text` block. Two or more such patterns
-render as gallery slides through the shared template, not separate hard-coded
-pages. Keep labels/arrows accurate, preserve decision points and do not imply
-measured performance. Label diagrams as assistant-authored illustrations when
-reconstructed from a source. Ordinary reading notes remain articles; do not force
-a gallery or diagram when it adds no clarity. Keep the underlying Markdown
-readable in Obsidian; controls, swipe and keyboard support belong to the renderer.
+When comparing architectures or patterns, use headings, concise explanations and
+illustrative ASCII diagrams in fenced `text` blocks. Keep labels and arrows
+accurate, preserve decision points and do not imply measured performance. Label
+diagrams as assistant-authored illustrations when reconstructed from a source.
+Notes render as ordinary articles without carousels or swipe controls; keep the
+underlying Markdown readable in Obsidian.
 
 
 Label assistant-authored interpretations as unreviewed. Exact quotes and hashes
 establish provenance, not semantic support. A research note is not a measured
 experiment result or an approved plan.
+
+## Blog-post workflow
+
+After reading a source, search for relevant existing vault notes and inspect them
+before proposing related links. Explain the connection; use `related_notes` for
+existing note IDs, never automatically imply that one paper proves another.
+
+If the user's take is already present, preserve its meaning while editing for
+clarity. Otherwise ask one conversational question such as "What caught your
+attention?" or "Would you try this in your project?" Do not require an opinion to
+save: if the user wants a bookmark, has no take yet or asks to save immediately,
+save without one. Never manufacture a personal position.
+
+Use `summary` and `detail` for the source account and explicitly labeled assistant
+analysis. Only put actual user-supplied views in `my_take`, with
+`my_take_basis: user_supplied`. Leave it null otherwise. Do not mix a paper's
+claims or the assistant's recommendations into the user's voice. The renderer
+shows a My take section only when present; related posts link only to notes that
+are in the same selected preview/publication. Private links are omitted publicly.
+
+Keep this a source-linked blog post, not a required thinking-history or conclusion
+tracking exercise. Existing private defaults and exact-content publication
+approval still apply. A post may remain a reading note with open questions.
 
 ## Dates and provenance
 

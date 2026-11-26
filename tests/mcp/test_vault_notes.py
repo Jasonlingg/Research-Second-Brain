@@ -129,3 +129,18 @@ def test_mcp_saves_recalls_and_approves_markdown(tmp_path):
             assert approved.structured_content['deployment']['status'] == 'pushed'
             assert VaultNotes(folder).snapshot(public=True)[0]['entries'][0]['id'] == record['id']
     asyncio.run(run())
+
+
+def test_personal_take_is_optional_and_related_private_ids_do_not_publish(tmp_path):
+    notes = VaultNotes(tmp_path)
+    private = notes.save(note())
+    with pytest.raises(ValueError, match='user-supplied'):
+        notes.save(note(my_take='An invented opinion'))
+    post = notes.save(note(my_take='I want to test this on my data', my_take_basis='user_supplied', related_notes=[private['id']]))
+    notes.approve(post['id'], post['sha256'])
+    public = notes.snapshot(public=True)[0]
+    assert public['entries'][0]['my_take'] == 'I want to test this on my data'
+    assert public['entries'][0]['related_notes'] == []
+    assert private['id'] not in json.dumps(public)
+    notes.approve(private['id'], private['sha256'])
+    assert notes.snapshot(public=True)[0]['entries'][0]['related_notes'] == [private['id']]

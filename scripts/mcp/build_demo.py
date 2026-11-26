@@ -65,13 +65,7 @@ def note_markdown(text):
         blocks.append('<pre class="ascii-diagram"><code>' + escape('\n'.join(code)) + '</code></pre>')
     flush()
     html = '\n'.join(blocks)
-    sections = re.split(r'(?=<h2>)', html)
-    for index, section in enumerate(sections):
-        parts = re.split(r'(?=<h3>)', section)
-        if len(parts) >= 3 and all('class="ascii-diagram"' in part for part in parts[1:]):
-            slides = ''.join('<section class="gallery-slide">' + part + '</section>' for part in parts[1:])
-            sections[index] = parts[0] + '<div class="note-gallery"><div class="gallery-track" tabindex="0" aria-label="Pattern gallery; use left and right arrow keys">' + slides + '</div></div>'
-    return ''.join(sections)
+    return html
 
 
 def study_data() -> str:
@@ -107,6 +101,14 @@ def note_pages(snapshot=None) -> dict[str, str]:
                   ("title", "summary", "status", "source_label")}
         fields["date"] = escape(entry["date"] or "Date not recorded")
         fields["kind"] = "Experiment journal" if entry["kind"] == "Experiment" else "Reading notes"
+        fields['my_take'] = ('<section class="personal-take"><h2>My take</h2>'
+                             + note_markdown(entry['my_take']) + '</section>') if entry.get('my_take') else ''
+        public_by_id = {r['id']: r for r in snapshot['entries']}
+        related = [public_by_id[i] for i in entry.get('related_notes', []) if i in public_by_id and i != identity]
+        fields['related'] = ('<section class="related-posts"><h2>Related reading</h2><ul>'
+                             + ''.join('<li><a href="../' + escape(r['id'], quote=True) + '/">'
+                                       + escape(r['title']) + '</a></li>' for r in related)
+                             + '</ul></section>') if related else ''
         for key in ("detail", "next_check"):
             fields[key] = note_markdown(entry[key])
         url = entry.get("source_url")
@@ -131,7 +133,7 @@ def build(output: Path, *, snapshot=None) -> None:
         raise ValueError("Output must be a new or empty directory")
     pages = note_pages(snapshot)
     output.mkdir(parents=True, exist_ok=True)
-    for name in ("index.html", "styles.css", "app.js", "research.json", "research.js", "gallery.js"):
+    for name in ("index.html", "styles.css", "app.js", "research.json", "research.js"):
         shutil.copyfile(ROOT / "web" / name, output / name)
     if snapshot is not None:
         (output / "research.json").write_text(json.dumps(snapshot, ensure_ascii=False))
@@ -151,12 +153,7 @@ def build(output: Path, *, snapshot=None) -> None:
     legacy = output / "research-mcp"
     legacy.mkdir()
     shutil.copyfile(demo, legacy / "demo.json")
-    (legacy / "index.html").write_text(
-        '<!doctype html><html lang="en"><meta charset="utf-8">'
-        '<meta name="viewport" content="width=device-width,initial-scale=1">'
-        '<meta http-equiv="refresh" content="0;url=../#recorded-demo">'
-        '<title>Envoy recorded walkthrough</title>'
-        '<a href="../#recorded-demo">Open the Envoy recorded walkthrough</a></html>')
+    shutil.copyfile(ROOT / "web/recorded.html", legacy / "index.html")
 
 
 if __name__ == "__main__":

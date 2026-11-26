@@ -26,6 +26,14 @@ def test_public_site_keeps_saved_receipts_and_study_data(tmp_path):
     assert (output / "demo.json").read_bytes() == (
         ROOT / "release/hackathon-research-mcp/demo.json").read_bytes()
     assert (output / "research.json").read_bytes() == (ROOT / "web/research.json").read_bytes()
+    homepage = (output / "index.html").read_text()
+    assert 'id="recorded-demo"' not in homepage
+    assert 'src="app.js"' not in homepage
+    assert 'href="research-mcp/"' in homepage
+    recorded = (output / "research-mcp/index.html").read_text()
+    assert 'id="recorded-demo"' in recorded
+    assert 'src="../app.js"' in recorded
+    assert 'http-equiv="refresh"' not in recorded
     rendered = (output / "case-study/index.html").read_text()
     original = (ROOT / "release/qasper-agent-study/studio.html").read_text()
     marker = '<script id="envoybench-data" type="application/json">'
@@ -40,7 +48,7 @@ def test_public_site_keeps_saved_receipts_and_study_data(tmp_path):
     expected_notes = {f"notes/{entry['id']}/index.html" for entry in
                       json.loads((ROOT / 'web/research.json').read_text())['entries']}
     assert {p.relative_to(output).as_posix() for p in output.rglob("*") if p.is_file()} == {
-        "index.html", "styles.css", "app.js", "research.json", "research.js", "gallery.js", "demo.json", "case-study/index.html",
+        "index.html", "styles.css", "app.js", "research.json", "research.js", "demo.json", "case-study/index.html",
         "case-study/rl.html", "case-study/data.json", "rl.html", "research-mcp/index.html", "research-mcp/demo.json",
     } | expected_notes
     for identity, page in note_pages().items():
@@ -82,13 +90,28 @@ def test_new_records_get_pages_and_content_is_escaped(tmp_path, monkeypatch):
         note_pages()
 
 
-def test_pattern_gallery_is_generated_from_headings_and_ascii_blocks():
+def test_patterns_remain_readable_sections_with_ascii_blocks():
     from scripts.mcp.build_demo import note_markdown
     rendered = note_markdown('## Patterns\n\n### One\n\nFirst.\n\n```text\n[A] -> [B]\n```\n\n### Two\n\nSecond.\n\n```text\n<script>\n```\n\n## Context\n\nKeep this outside.')
-    assert rendered.count('class="gallery-slide"') == 2
+    assert 'gallery' not in rendered
+    assert rendered.count('<h3>') == 2
     assert rendered.count('class="ascii-diagram"') == 2
     assert '[A] -&gt; [B]' in rendered
     assert '&lt;script&gt;' in rendered
     assert '<script>' not in rendered
-    assert rendered.index('</div></div>') < rendered.index('<h2>Context</h2>')
+    assert rendered.index('<h3>Two</h3>') < rendered.index('<h2>Context</h2>')
     assert 'note-gallery' not in note_markdown('### One\n\nText\n\n### Two\n\nMore text')
+
+
+def test_post_take_and_related_links_render_only_selected_records():
+    import copy
+    entry = copy.deepcopy(json.loads((ROOT / 'web/research.json').read_text())['entries'][0])
+    other = dict(entry, id='related-public-note', title='Related public paper')
+    entry.update(my_take='My **actual** opinion <script>bad()</script>', related_notes=['related-public-note', 'private-not-selected'])
+    page = note_pages({'entries': [entry, other]})[entry['id']]
+    assert '<h2>My take</h2>' in page
+    assert '<strong>actual</strong>' in page
+    assert '<script>bad()' not in page
+    assert '../related-public-note/' in page
+    assert 'private-not-selected' not in page
+    assert '<h2>My take</h2>' not in note_pages({'entries': [other]})[other['id']]

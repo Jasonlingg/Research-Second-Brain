@@ -10,7 +10,7 @@ from uuid import uuid4
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from src.mcp.ml_experiment_io import LocalFiles
 
@@ -29,6 +29,17 @@ class Note(BaseModel):
     status: str = Field(default='Unreviewed research note', max_length=300)
     origin_record_id: str | None = Field(default=None, max_length=100)
     capture_basis: str | None = Field(default=None, max_length=1000)
+    my_take: str | None = Field(default=None, max_length=5000)
+    my_take_basis: Literal['not_provided', 'user_supplied'] = 'not_provided'
+    related_notes: list[str] = Field(default_factory=list, max_length=10)
+
+    @model_validator(mode='after')
+    def personal_fields(self):
+        if self.my_take and self.my_take_basis != 'user_supplied':
+            raise ValueError('A personal take requires explicitly user-supplied wording')
+        if any(not re.fullmatch(r'note_[0-9a-f]{32}', identity) for identity in self.related_notes):
+            raise ValueError('Related notes must use note IDs')
+        return self
 
 
 def sha(raw):
@@ -127,6 +138,10 @@ class VaultNotes:
         name = self.name(identity)
         now = datetime.now(timezone.utc).isoformat()
         with self.files.locked() as directory:
+            for related in parsed.related_notes:
+                if related == identity:
+                    raise ValueError('A note cannot link to itself')
+                self.parse(related, self.read(directory, self.name(related)))
             try:
                 old = self.parse(identity, self.read(directory, name))
             except FileNotFoundError:
@@ -171,7 +186,8 @@ class VaultNotes:
         return dict(id=record['id'], kind=note['kind'], date=(note['shared_at'] or record['created_at'])[:10],
                     title=note['title'], summary=note['summary'], detail=note['detail'],
                     next_check=note['next_check'], status=note['status'], source_label=note['source_label'],
-                    source_url=note['source_url'], memory_id=record['id'])
+                    source_url=note['source_url'], memory_id=record['id'],
+                    my_take=note['my_take'], related_notes=note['related_notes'])
 
     def approve(self, identity, expected_sha256, revoke=False):
         with self.files.locked() as directory:
@@ -207,7 +223,7 @@ class VaultNotes:
     def snapshot(self, public=False):
         if public:
             with self.files.locked() as directory:
-                entries = [value['entry'] for value in self._approvals(directory).values()]
+                entries = self.approved_entries(self._approvals(directory))
             errors = []
         else:
             scan = self.scan()
@@ -215,3 +231,10 @@ class VaultNotes:
         return {'updated_at': datetime.now(timezone.utc).date().isoformat(),
                 'scope': 'Approved exact-content snapshots; subsequent edits are private.' if public else 'PRIVATE vault preview — never deploy this directory.',
                 'entries': entries}, errors
+
+    @staticmethod
+    def approved_entries(state):
+        # Never disclose even the IDs of linked private notes in public JSON.
+        ids = {r['entry']['id'] for r in state.values()}
+        return [{**r['entry'], 'related_notes': [i for i in r['entry'].get('related_notes', []) if i in ids]}
+                for r in state.values()]

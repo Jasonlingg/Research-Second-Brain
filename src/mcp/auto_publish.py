@@ -56,7 +56,7 @@ class AutoPublisher:
                 # Read approval snapshots after acquiring the deployment lock.
                 with notes.files.locked() as directory:
                     state = notes._approvals(directory)
-                approved = [r['entry'] for r in state.values()]
+                approved = notes.approved_entries(state)
                 replaces = {r.get('origin_record_id') for r in state.values()} - {None}
                 retained = [e for e in existing['entries'] if not e['id'].startswith('note_')
                             and e['id'] not in replaces and e.get('memory_id') not in replaces]

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-22",
+  "updated_at": "2026-11-26",
   "scope": "Selected public summaries from MCP memory and the experiment atlas, checked against saved source identities before publishing. A published snapshot, not live access to private notes. Dates are sharing dates for notes and run dates for experiments; date-only precision.",
   "entries": [
     {
@@ -9,7 +9,7 @@
       "title": "Where should a team of agents commit to a decision?",
       "summary": "Comparing sequential pipelines, routing, orchestrator/workers, parallel candidates, debate and population search.",
       "status": "Unreviewed research note",
-      "detail": "The screenshot groups architectures by where alternatives are discarded. The next question is whether extra agents help a paper task enough to justify their cost. No architecture comparison has been run. Jason supplied the article URL as the source; the full article was not accessible for independent verification.",
+      "detail": "The screenshot groups architectures by where alternatives are discarded. The next question is whether extra agents help a paper task enough to justify their cost. No architecture comparison has been run. Jason supplied the article URL as the source; the full article was not accessible for independent verification.\n\n## Diagram\n\nAssistant-authored illustration of this note.\n\n```text\nSequential:   [A] -> [B] -> [C]\nRouter:       [?] -> [A or B]\nWorkers:      [Lead] -> [A + B]\nCandidates:   [A + B] -> [Pick]\nDebate:       [A <-> B] -> [Judge]\nPopulation:   [Generate] -> [Score]\n                  ^           |\n                  +-- Evolve -+\n```",
       "next_check": "Compare a single-agent baseline with one motivated alternative under the same task and request budget.",
       "source_label": "The Return of the Designer · source supplied by Jason",
       "source_url": "https://robertopieraccini.substack.com/p/the-return-of-the-designer",
@@ -22,7 +22,7 @@
       "title": "Extracting methods, models and datasets from papers",
       "summary": "Considering a PyTorch token classifier that keeps exact source spans and caches annotations when a paper is opened.",
       "status": "Proposal · not implemented",
-      "detail": "Start by auditing public datasets and label definitions. PyTorch is the initial runtime candidate; ONNX or TensorRT would need a measured bottleneck and output-equivalence checks. The shared post’s latency target is not our benchmark result.",
+      "detail": "Start by auditing public datasets and label definitions. PyTorch is the initial runtime candidate; ONNX or TensorRT would need a measured bottleneck and output-equivalence checks. The shared post’s latency target is not our benchmark result.\n\n## Diagram\n\nAssistant-authored illustration of this note.\n\n```text\nProposed extraction flow\n\n[Paper text]\n      |\n      v\n[PyTorch token classifier]\n      |\n      v\n[Entities + source spans]\n      |\n      v\n[Cached annotations]\n```",
       "next_check": "Choose a licensed dataset, inspect labels and establish a simple extraction baseline before training.",
       "source_label": "ModernBERT token-classification documentation",
       "source_url": "https://huggingface.co/docs/transformers/model_doc/modernbert",
@@ -35,7 +35,7 @@
       "title": "Qwen fine-tuning: reliable execution versus useful answers",
       "summary": "On 40 selected QASPER questions, error-free episodes rose from 18/40 to 39/40 after SFT.",
       "status": "Saved comparison · provisional answer review",
-      "detail": "Both checkpoints received supported-answer passes on 3/20 answerable questions in model-assisted review. The 44 demonstrations were teacher-seeded and include AI repairs. This measures the selected development workload, not general paper-research quality.",
+      "detail": "Both checkpoints received supported-answer passes on 3/20 answerable questions in model-assisted review. The 44 demonstrations were teacher-seeded and include AI repairs. This measures the selected development workload, not general paper-research quality.\n\n## Diagram\n\nAssistant-authored illustration of this note.\n\n```text\nSelected QASPER questions\n\n                    Base     SFT v5\nError-free          18/40 -> 39/40\nSupported answers    3/20 ->  3/20\n\nExecution improved\nAnswer-quality gain not established\n```",
       "next_check": "Audit stopping decisions and false refusals before proposing another training run.",
       "source_label": "Inspect saved answers and traces",
       "source_url": "https://jasonlingg.github.io/Research-Second-Brain/case-study/",
@@ -48,7 +48,7 @@
       "title": "A small GRPO pilot and its limits",
       "summary": "The restarted pilot completed nine verified optimizer updates; rollout collection timed out before update ten.",
       "status": "Exploratory · no answer-quality gain established",
-      "detail": "A separate exploratory comparison found one complete supported answer in each arm on ten clear-reference questions. Sparse within-group reward differences and a small evaluation limit what can be concluded. The checkpoint was not promoted.",
+      "detail": "A separate exploratory comparison found one complete supported answer in each arm on ten clear-reference questions. Sparse within-group reward differences and a small evaluation limit what can be concluded. The checkpoint was not promoted.\n\n## Diagram\n\nAssistant-authored illustration of this note.\n\n```text\n[v5 checkpoint]\n       |\n       v\n[9 verified optimizer updates]\n       |\n       +--> [Update 10 rollout timeout]\n       |\n       v\n[Exploratory evaluation]\n v5: 1/10    step 9: 1/10\n complete supported answers\n```",
       "next_check": "Improve reviewed training signal and evaluation design before spending on another RL run.",
       "source_label": "Read the published pilot report",
       "source_url": "https://github.com/Jasonlingg/Research-Second-Brain/blob/main/docs/READER_RL_PILOT_20261026.md",

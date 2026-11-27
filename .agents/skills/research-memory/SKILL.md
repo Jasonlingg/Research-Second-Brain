@@ -33,11 +33,19 @@ in YAML metadata (`origin_record_id`, `capture_basis` for vault notes), not the
 article body. Keep the substantive uncertainty and source limitations visible.
 Do not invent the user's personal motivation; label your applicability analysis.
 
-The Latest notes page uses a grid of separate posts. Its cards take an ASCII
-preview from the first fenced `text` diagram in each note. Add a small accurate
-diagram when it helps explain a flow or architecture, preserving it in the
-Markdown so it appears on the full note page too. Do not invent diagrams for
-purely prose ideas.
+Include at least one compact ASCII diagram in every new research note, and
+when substantively revising an existing note. Put it in the note's `detail`
+Markdown inside a fenced `text` block, so it appears in the full article and the
+shared card preview. The Latest notes grid uses the first such block as its cover.
+
+Choose a diagram that fits the content: a workflow, architecture, comparison,
+argument map or research question with its evidence and open check. For prose-only
+ideas, illustrate the argument rather than inventing system components or causal
+links. Keep the first diagram small enough to read on a card, ideally under
+40 columns and 12 lines. Before saving, check that the diagram is present,
+consistent with the source and labeled as an assistant-authored illustration.
+The fallback text cover remains for older notes; it is not a substitute for a
+diagram in newly captured notes.
 
 When comparing architectures or patterns, use headings, concise explanations and
 illustrative ASCII diagrams in fenced `text` blocks. Keep labels and arrows
